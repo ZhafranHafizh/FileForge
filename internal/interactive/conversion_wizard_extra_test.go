@@ -33,7 +33,7 @@ func (f *fakeImageToPDFConverter) Convert(_ context.Context, req convert.ImageTo
 
 func TestPDFToImageWizardExecuteUsesService(t *testing.T) {
 	svc := &fakePDFToImageConverter{}
-	wizard := NewPDFToImageWizard(svc)
+	wizard := NewPDFToImageWizard(svc, nil)
 	err := wizard.Execute(context.Background(), PDFToImageInput{
 		InputPath: `"./input.pdf"`,
 		OutputDir: `'./pages'`,
@@ -52,7 +52,7 @@ func TestPDFToImageWizardExecuteUsesService(t *testing.T) {
 
 func TestImageToPDFWizardExecuteUsesService(t *testing.T) {
 	svc := &fakeImageToPDFConverter{}
-	wizard := NewImageToPDFWizard(svc)
+	wizard := NewImageToPDFWizard(svc, nil)
 	err := wizard.Execute(context.Background(), ImageToPDFInput{
 		InputPath:  `"./input.jpg"`,
 		OutputPath: `'./output.pdf'`,

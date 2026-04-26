@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	outputpkg "fileforge/internal/output"
 	pdfpkg "fileforge/internal/pdf"
 	"fileforge/internal/runner"
 
@@ -11,8 +12,9 @@ import (
 )
 
 type pdfOptions struct {
-	Out   string
-	Pages string
+	Out       string
+	OutputDir string
+	Pages     string
 }
 
 var pdfOpts pdfOptions
@@ -32,11 +34,15 @@ var pdfMergeCmd = &cobra.Command{
 			Stdout:  cmd.ErrOrStderr(),
 			Stderr:  cmd.ErrOrStderr(),
 		})
+		outputPath, err := outputpkg.ResolveOutputPath("merged.pdf", pdfOpts.Out, pdfOpts.OutputDir, "", "pdf", rootOpts.Force)
+		if err != nil {
+			return newCommandError(ExitInvalidInput, err)
+		}
 
 		merger := pdfpkg.NewMerger(run)
-		err := merger.Merge(context.Background(), pdfpkg.MergeRequest{
+		err = merger.Merge(context.Background(), pdfpkg.MergeRequest{
 			InputPaths: args,
-			OutputPath: pdfOpts.Out,
+			OutputPath: outputPath,
 			Force:      rootOpts.Force,
 		})
 		if err != nil {
@@ -49,11 +55,11 @@ var pdfMergeCmd = &cobra.Command{
 			return newCommandError(ExitConversionFailed, err)
 		}
 
+		out := cmd.OutOrStdout()
 		if !rootOpts.Quiet {
-			_, _ = fmt.Fprintf(cmd.OutOrStdout(), "Merged %d PDFs into %s\n", len(args), pdfOpts.Out)
+			_, _ = fmt.Fprintf(out, "Merged %d PDFs into %s\n", len(args), outputPath)
 		}
-
-		return nil
+		return outputpkg.PrintSuccess(out, outputPath)
 	},
 }
 
@@ -67,12 +73,19 @@ var pdfSplitCmd = &cobra.Command{
 			Stdout:  cmd.ErrOrStderr(),
 			Stderr:  cmd.ErrOrStderr(),
 		})
+		outputPath, err := outputpkg.ResolveOutputPath(args[0], pdfOpts.Out, pdfOpts.OutputDir, "", "pdf", rootOpts.Force)
+		if pdfOpts.OutputDir != "" && pdfOpts.Out == "" {
+			outputPath, err = outputpkg.ResolveOutputPath(args[0], "", pdfOpts.OutputDir, "-pages-"+outputpkg.SanitizeFilenamePart(pdfOpts.Pages), "pdf", rootOpts.Force)
+		}
+		if err != nil {
+			return newCommandError(ExitInvalidInput, err)
+		}
 
 		splitter := pdfpkg.NewSplitter(run)
-		err := splitter.Split(context.Background(), pdfpkg.SplitRequest{
+		err = splitter.Split(context.Background(), pdfpkg.SplitRequest{
 			InputPath:  args[0],
 			PageRange:  pdfOpts.Pages,
-			OutputPath: pdfOpts.Out,
+			OutputPath: outputPath,
 			Force:      rootOpts.Force,
 		})
 		if err != nil {
@@ -85,11 +98,11 @@ var pdfSplitCmd = &cobra.Command{
 			return newCommandError(ExitConversionFailed, err)
 		}
 
+		out := cmd.OutOrStdout()
 		if !rootOpts.Quiet {
-			_, _ = fmt.Fprintf(cmd.OutOrStdout(), "Extracted pages %s to %s\n", pdfOpts.Pages, pdfOpts.Out)
+			_, _ = fmt.Fprintf(out, "Extracted pages %s to %s\n", pdfOpts.Pages, outputPath)
 		}
-
-		return nil
+		return outputpkg.PrintSuccess(out, outputPath)
 	},
 }
 
@@ -140,12 +153,14 @@ func init() {
 
 	pdfCmd.AddCommand(pdfMergeCmd)
 	pdfMergeCmd.Flags().StringVar(&pdfOpts.Out, "out", "", "output PDF path")
-	_ = pdfMergeCmd.MarkFlagRequired("out")
+	pdfMergeCmd.Flags().StringVar(&pdfOpts.OutputDir, "output-dir", "", "output directory for generated files")
+	pdfMergeCmd.Flags().StringVar(&pdfOpts.OutputDir, "output", "", "alias for --output-dir")
 
 	pdfCmd.AddCommand(pdfSplitCmd)
 	pdfSplitCmd.Flags().StringVar(&pdfOpts.Out, "out", "", "output PDF path")
+	pdfSplitCmd.Flags().StringVar(&pdfOpts.OutputDir, "output-dir", "", "output directory for generated files")
+	pdfSplitCmd.Flags().StringVar(&pdfOpts.OutputDir, "output", "", "alias for --output-dir")
 	pdfSplitCmd.Flags().StringVar(&pdfOpts.Pages, "pages", "", "page range to extract")
-	_ = pdfSplitCmd.MarkFlagRequired("out")
 	_ = pdfSplitCmd.MarkFlagRequired("pages")
 
 	pdfCmd.AddCommand(pdfInfoCmd)

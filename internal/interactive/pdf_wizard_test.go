@@ -58,7 +58,7 @@ func (f *fakePDFInspector) Info(_ context.Context, req pdf.InfoRequest) (pdf.Inf
 
 func TestPDFCompressWizardExecuteUsesService(t *testing.T) {
 	svc := &fakePDFCompressor{}
-	wizard := NewPDFCompressWizard(svc)
+	wizard := NewPDFCompressWizard(svc, nil)
 
 	err := wizard.Execute(context.Background(), PDFCompressInput{
 		InputPath:  `"./input.pdf"`,
@@ -79,7 +79,7 @@ func TestPDFCompressWizardExecuteUsesService(t *testing.T) {
 
 func TestPDFMergeWizardExecuteUsesService(t *testing.T) {
 	svc := &fakePDFMerger{}
-	wizard := NewPDFMergeWizard(svc)
+	wizard := NewPDFMergeWizard(svc, nil)
 
 	err := wizard.Execute(context.Background(), PDFMergeInput{
 		InputPaths: []string{`"./a.pdf"`, `'./b.pdf'`},
@@ -99,7 +99,7 @@ func TestPDFMergeWizardExecuteUsesService(t *testing.T) {
 
 func TestPDFSplitWizardExecuteUsesService(t *testing.T) {
 	svc := &fakePDFSplitter{}
-	wizard := NewPDFSplitWizard(svc)
+	wizard := NewPDFSplitWizard(svc, nil)
 
 	err := wizard.Execute(context.Background(), PDFSplitInput{
 		InputPath:  `"./input.pdf"`,
@@ -120,7 +120,7 @@ func TestPDFSplitWizardExecuteUsesService(t *testing.T) {
 
 func TestPDFInfoWizardExecuteUsesService(t *testing.T) {
 	svc := &fakePDFInspector{}
-	wizard := NewPDFInfoWizard(svc)
+	wizard := NewPDFInfoWizard(svc, nil)
 
 	err := wizard.Execute(context.Background(), PDFInfoInput{
 		InputPath: `"./input.pdf"`,

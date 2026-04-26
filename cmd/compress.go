@@ -5,7 +5,9 @@ import (
 	"fmt"
 
 	compresspkg "fileforge/internal/compress"
+	outputpkg "fileforge/internal/output"
 	"fileforge/internal/runner"
+	"fileforge/internal/validation"
 
 	"github.com/spf13/cobra"
 )
@@ -15,13 +17,15 @@ func init() {
 	compressCmd.Flags().IntVar(&compressOpts.Quality, "quality", 80, "image quality from 1 to 100")
 	compressCmd.Flags().StringVar(&compressOpts.Preset, "preset", "", "PDF compression preset: screen, ebook, printer, prepress, default")
 	compressCmd.Flags().StringVar(&compressOpts.Out, "out", "", "output file path")
-	_ = compressCmd.MarkFlagRequired("out")
+	compressCmd.Flags().StringVar(&compressOpts.OutputDir, "output-dir", "", "output directory for generated files")
+	compressCmd.Flags().StringVar(&compressOpts.OutputDir, "output", "", "alias for --output-dir")
 }
 
 type compressOptions struct {
-	Quality int
-	Preset  string
-	Out     string
+	Quality   int
+	Preset    string
+	Out       string
+	OutputDir string
 }
 
 var compressOpts compressOptions
@@ -46,10 +50,15 @@ var compressCmd = &cobra.Command{
 }
 
 func runImageCompression(cmd *cobra.Command, run *runner.Runner, input string) error {
+	outputPath, err := outputpkg.ResolveOutputPath(input, compressOpts.Out, compressOpts.OutputDir, "-compressed", validation.Extension(input), rootOpts.Force)
+	if err != nil {
+		return compresspkg.ValidationError{Err: err}
+	}
+
 	compressor := compresspkg.NewImageCompressor(run)
 	result, err := compressor.Compress(context.Background(), compresspkg.ImageCompressRequest{
 		InputPath:  input,
-		OutputPath: compressOpts.Out,
+		OutputPath: outputPath,
 		Quality:    compressOpts.Quality,
 		Force:      rootOpts.Force,
 	})
@@ -63,29 +72,30 @@ func runImageCompression(cmd *cobra.Command, run *runner.Runner, input string) e
 		return newCommandError(ExitCompressionFailed, err)
 	}
 
+	out := cmd.OutOrStdout()
 	if rootOpts.Quiet {
-		return nil
+		return outputpkg.PrintSuccess(out, result.OutputPath)
 	}
 
-	out := cmd.OutOrStdout()
 	_, _ = fmt.Fprintf(out, "Compressed %s -> %s\n", result.InputPath, result.OutputPath)
 	_, _ = fmt.Fprintf(out, "Before: %s\n", compresspkg.FormatBytes(result.BeforeBytes))
 	_, _ = fmt.Fprintf(out, "After:  %s\n", compresspkg.FormatBytes(result.AfterBytes))
 	if result.PercentChange != nil {
 		_, _ = fmt.Fprintf(out, "Change: %.2f%%\n", *result.PercentChange)
 	}
-	if result.AfterBytes > result.BeforeBytes {
-		_, _ = fmt.Fprintln(out, "Warning: output PDF is larger than input.")
-	}
-
-	return nil
+	return outputpkg.PrintSuccess(out, result.OutputPath)
 }
 
 func runPDFCompression(cmd *cobra.Command, run *runner.Runner, input string) error {
+	outputPath, err := outputpkg.ResolveOutputPath(input, compressOpts.Out, compressOpts.OutputDir, "-compressed", "pdf", rootOpts.Force)
+	if err != nil {
+		return compresspkg.ValidationError{Err: err}
+	}
+
 	compressor := compresspkg.NewPDFCompressor(run)
 	result, err := compressor.Compress(context.Background(), compresspkg.PDFCompressRequest{
 		InputPath:  input,
-		OutputPath: compressOpts.Out,
+		OutputPath: outputPath,
 		Preset:     compressOpts.Preset,
 		Force:      rootOpts.Force,
 	})
@@ -99,17 +109,19 @@ func runPDFCompression(cmd *cobra.Command, run *runner.Runner, input string) err
 		return newCommandError(ExitCompressionFailed, err)
 	}
 
+	out := cmd.OutOrStdout()
 	if rootOpts.Quiet {
-		return nil
+		return outputpkg.PrintSuccess(out, result.OutputPath)
 	}
 
-	out := cmd.OutOrStdout()
 	_, _ = fmt.Fprintf(out, "Compressed %s -> %s\n", result.InputPath, result.OutputPath)
 	_, _ = fmt.Fprintf(out, "Before: %s\n", compresspkg.FormatBytes(result.BeforeBytes))
 	_, _ = fmt.Fprintf(out, "After:  %s\n", compresspkg.FormatBytes(result.AfterBytes))
 	if result.PercentChange != nil {
 		_, _ = fmt.Fprintf(out, "Change: %.2f%%\n", *result.PercentChange)
 	}
-
-	return nil
+	if result.AfterBytes > result.BeforeBytes {
+		_, _ = fmt.Fprintln(out, "Warning: output PDF is larger than input.")
+	}
+	return outputpkg.PrintSuccess(out, result.OutputPath)
 }

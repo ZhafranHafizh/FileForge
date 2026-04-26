@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	convertpkg "fileforge/internal/convert"
+	outputpkg "fileforge/internal/output"
 	"fileforge/internal/runner"
 
 	"github.com/spf13/cobra"
@@ -14,16 +15,18 @@ func init() {
 	rootCmd.AddCommand(convertCmd)
 	convertCmd.Flags().StringVar(&convertOpts.To, "to", "", "target format: jpg, jpeg, png, webp, pdf")
 	convertCmd.Flags().StringVar(&convertOpts.Out, "out", "", "output file or directory path")
+	convertCmd.Flags().StringVar(&convertOpts.OutputDir, "output-dir", "", "output directory for generated files")
+	convertCmd.Flags().StringVar(&convertOpts.OutputDir, "output", "", "alias for --output-dir")
 	convertCmd.Flags().IntVar(&convertOpts.DPI, "dpi", 150, "output DPI for PDF to image conversion")
 	convertCmd.Flags().IntVar(&convertOpts.FirstPage, "first-page", 0, "first page to render for PDF to image conversion")
 	convertCmd.Flags().IntVar(&convertOpts.LastPage, "last-page", 0, "last page to render for PDF to image conversion")
 	_ = convertCmd.MarkFlagRequired("to")
-	_ = convertCmd.MarkFlagRequired("out")
 }
 
 type convertOptions struct {
 	To        string
 	Out       string
+	OutputDir string
 	DPI       int
 	FirstPage int
 	LastPage  int
@@ -66,28 +69,52 @@ func runConvert(cmd *cobra.Command, run *runner.Runner, input string) error {
 
 	switch route {
 	case convertpkg.RouteImageToImage:
-		return convertpkg.NewImageConverter(run).Convert(context.Background(), convertpkg.ImageConvertRequest{
+		outputPath, err := outputpkg.ResolveOutputPath(input, convertOpts.Out, convertOpts.OutputDir, "", convertOpts.To, rootOpts.Force)
+		if err != nil {
+			return convertpkg.ValidationError{Err: err}
+		}
+		err = convertpkg.NewImageConverter(run).Convert(context.Background(), convertpkg.ImageConvertRequest{
 			InputPath:  input,
-			OutputPath: convertOpts.Out,
+			OutputPath: outputPath,
 			ToFormat:   convertOpts.To,
 			Force:      rootOpts.Force,
 		})
+		if err == nil {
+			return outputpkg.PrintSuccess(cmd.OutOrStdout(), outputPath)
+		}
+		return err
 	case convertpkg.RoutePDFToImage:
-		return convertpkg.NewPDFToImageConverter(run).Convert(context.Background(), convertpkg.PDFToImageRequest{
+		outputDir, err := outputpkg.ResolveOutputDir(convertOpts.Out, convertOpts.OutputDir, outputpkg.GeneratedPDFToImageDirName(input))
+		if err != nil {
+			return convertpkg.ValidationError{Err: err}
+		}
+		err = convertpkg.NewPDFToImageConverter(run).Convert(context.Background(), convertpkg.PDFToImageRequest{
 			InputPath: input,
-			OutputDir: convertOpts.Out,
+			OutputDir: outputDir,
 			ToFormat:  convertOpts.To,
 			DPI:       convertOpts.DPI,
 			FirstPage: convertOpts.FirstPage,
 			LastPage:  convertOpts.LastPage,
 			Force:     rootOpts.Force,
 		})
+		if err == nil {
+			return outputpkg.PrintSuccess(cmd.OutOrStdout(), outputDir)
+		}
+		return err
 	case convertpkg.RouteImageToPDF:
-		return convertpkg.NewImageToPDFConverter(run).Convert(context.Background(), convertpkg.ImageToPDFRequest{
+		outputPath, err := outputpkg.ResolveOutputPath(input, convertOpts.Out, convertOpts.OutputDir, "", "pdf", rootOpts.Force)
+		if err != nil {
+			return convertpkg.ValidationError{Err: err}
+		}
+		err = convertpkg.NewImageToPDFConverter(run).Convert(context.Background(), convertpkg.ImageToPDFRequest{
 			InputPath:  input,
-			OutputPath: convertOpts.Out,
+			OutputPath: outputPath,
 			Force:      rootOpts.Force,
 		})
+		if err == nil {
+			return outputpkg.PrintSuccess(cmd.OutOrStdout(), outputPath)
+		}
+		return err
 	default:
 		return convertpkg.ValidationError{Err: fmt.Errorf("unsupported conversion route")}
 	}

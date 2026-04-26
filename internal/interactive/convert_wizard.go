@@ -3,8 +3,10 @@ package interactive
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"fileforge/internal/convert"
+	outputpkg "fileforge/internal/output"
 	"fileforge/internal/validation"
 
 	"charm.land/huh/v2"
@@ -24,19 +26,23 @@ type imageToPDFService interface {
 
 type ConvertWizard struct {
 	service imageConvertService
+	stdout  io.Writer
 }
 
 type PDFToImageWizard struct {
 	service pdfToImageService
+	stdout  io.Writer
 }
 
 type ImageToPDFWizard struct {
 	service imageToPDFService
+	stdout  io.Writer
 }
 
 type ConvertInput struct {
 	InputPath  string
 	ToFormat   string
+	OutputDir  string
 	OutputPath string
 	Force      bool
 }
@@ -48,24 +54,26 @@ type PDFToImageInput struct {
 	DPI       int
 	FirstPage int
 	LastPage  int
+	Force     bool
 }
 
 type ImageToPDFInput struct {
 	InputPath  string
+	OutputDir  string
 	OutputPath string
 	Force      bool
 }
 
-func NewConvertWizard(service imageConvertService) *ConvertWizard {
-	return &ConvertWizard{service: service}
+func NewConvertWizard(service imageConvertService, stdout io.Writer) *ConvertWizard {
+	return &ConvertWizard{service: service, stdout: stdout}
 }
 
-func NewPDFToImageWizard(service pdfToImageService) *PDFToImageWizard {
-	return &PDFToImageWizard{service: service}
+func NewPDFToImageWizard(service pdfToImageService, stdout io.Writer) *PDFToImageWizard {
+	return &PDFToImageWizard{service: service, stdout: stdout}
 }
 
-func NewImageToPDFWizard(service imageToPDFService) *ImageToPDFWizard {
-	return &ImageToPDFWizard{service: service}
+func NewImageToPDFWizard(service imageToPDFService, stdout io.Writer) *ImageToPDFWizard {
+	return &ImageToPDFWizard{service: service, stdout: stdout}
 }
 
 func (w *ConvertWizard) Run(ctx context.Context) error {
@@ -97,12 +105,12 @@ func (w *ConvertWizard) Run(ctx context.Context) error {
 				).
 				Value(&state.ToFormat),
 			huh.NewInput().
-				Title("Output path").
-				Value(&state.OutputPath).
+				Title("Output folder").
+				Value(&state.OutputDir).
 				Validate(func(v string) error {
 					path := NormalizePath(v)
 					if path == "" {
-						return fmt.Errorf("output path is required")
+						return fmt.Errorf("output folder is required")
 					}
 					return nil
 				}),
@@ -113,7 +121,13 @@ func (w *ConvertWizard) Run(ctx context.Context) error {
 	}
 
 	state.InputPath = NormalizePath(state.InputPath)
-	state.OutputPath = NormalizePath(state.OutputPath)
+	state.OutputDir = NormalizePath(state.OutputDir)
+
+	outputPath, err := generatedImageConvertOutput(state.InputPath, state.OutputDir, state.ToFormat)
+	if err != nil {
+		return ValidationError{Err: err}
+	}
+	state.OutputPath = outputPath
 
 	if force, err := confirmOverwrite(state.OutputPath); err != nil {
 		return err
@@ -130,7 +144,10 @@ func (w *ConvertWizard) Run(ctx context.Context) error {
 		return ErrCancelled
 	}
 
-	return w.Execute(ctx, state)
+	if err := w.Execute(ctx, state); err != nil {
+		return err
+	}
+	return printSuccess(w.stdout, state.OutputPath)
 }
 
 func (w *ConvertWizard) Execute(ctx context.Context, in ConvertInput) error {
@@ -150,4 +167,8 @@ func (w *ConvertWizard) Execute(ctx context.Context, in ConvertInput) error {
 		return err
 	}
 	return nil
+}
+
+func generatedImageConvertOutput(inputPath string, outputDir string, toFormat string) (string, error) {
+	return outputpkg.ResolveOutputPath(inputPath, "", outputDir, "", toFormat, true)
 }

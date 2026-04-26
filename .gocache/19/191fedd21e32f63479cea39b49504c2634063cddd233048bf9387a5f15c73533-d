@@ -1,0 +1,16 @@
+./compress_wizard.go
+./conversion_wizard_extra.go
+./convert_wizard.go
+./menu.go
+./output_helpers.go
+./overwrite.go
+./path.go
+./pdf_helpers.go
+./pdf_wizard.go
+./compress_wizard_test.go
+./conversion_wizard_extra_test.go
+./convert_wizard_test.go
+./menu_test.go
+./path_test.go
+./pdf_helpers_test.go
+./pdf_wizard_test.go

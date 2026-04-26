@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+set -eu
+
+mkdir -p bin
+
+go fmt ./...
+go test ./...
+go vet ./...
+go build -buildvcs=false -o bin/fileforge .

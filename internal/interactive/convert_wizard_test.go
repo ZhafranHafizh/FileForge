@@ -21,7 +21,7 @@ func (f *fakeConverter) Convert(_ context.Context, req convert.ImageConvertReque
 
 func TestConvertWizardExecuteUsesService(t *testing.T) {
 	svc := &fakeConverter{}
-	wizard := NewConvertWizard(svc)
+	wizard := NewConvertWizard(svc, nil)
 
 	err := wizard.Execute(context.Background(), ConvertInput{
 		InputPath:  `"./input.png"`,

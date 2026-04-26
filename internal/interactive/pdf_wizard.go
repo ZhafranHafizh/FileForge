@@ -3,9 +3,11 @@ package interactive
 import (
 	"context"
 	"fmt"
+	"io"
 	"strings"
 
 	"fileforge/internal/compress"
+	outputpkg "fileforge/internal/output"
 	"fileforge/internal/pdf"
 	"fileforge/internal/validation"
 
@@ -30,29 +32,35 @@ type pdfInfoService interface {
 
 type PDFCompressWizard struct {
 	service pdfCompressService
+	stdout  io.Writer
 }
 
 type PDFMergeWizard struct {
 	service pdfMergeService
+	stdout  io.Writer
 }
 
 type PDFSplitWizard struct {
 	service pdfSplitService
+	stdout  io.Writer
 }
 
 type PDFInfoWizard struct {
 	service pdfInfoService
+	stdout  io.Writer
 }
 
 type PDFCompressInput struct {
 	InputPath  string
 	Preset     string
+	OutputDir  string
 	OutputPath string
 	Force      bool
 }
 
 type PDFMergeInput struct {
 	InputPaths []string
+	OutputDir  string
 	OutputPath string
 	Force      bool
 }
@@ -60,6 +68,7 @@ type PDFMergeInput struct {
 type PDFSplitInput struct {
 	InputPath  string
 	PageRange  string
+	OutputDir  string
 	OutputPath string
 	Force      bool
 }
@@ -68,20 +77,20 @@ type PDFInfoInput struct {
 	InputPath string
 }
 
-func NewPDFCompressWizard(service pdfCompressService) *PDFCompressWizard {
-	return &PDFCompressWizard{service: service}
+func NewPDFCompressWizard(service pdfCompressService, stdout io.Writer) *PDFCompressWizard {
+	return &PDFCompressWizard{service: service, stdout: stdout}
 }
 
-func NewPDFMergeWizard(service pdfMergeService) *PDFMergeWizard {
-	return &PDFMergeWizard{service: service}
+func NewPDFMergeWizard(service pdfMergeService, stdout io.Writer) *PDFMergeWizard {
+	return &PDFMergeWizard{service: service, stdout: stdout}
 }
 
-func NewPDFSplitWizard(service pdfSplitService) *PDFSplitWizard {
-	return &PDFSplitWizard{service: service}
+func NewPDFSplitWizard(service pdfSplitService, stdout io.Writer) *PDFSplitWizard {
+	return &PDFSplitWizard{service: service, stdout: stdout}
 }
 
-func NewPDFInfoWizard(service pdfInfoService) *PDFInfoWizard {
-	return &PDFInfoWizard{service: service}
+func NewPDFInfoWizard(service pdfInfoService, stdout io.Writer) *PDFInfoWizard {
+	return &PDFInfoWizard{service: service, stdout: stdout}
 }
 
 func (w *PDFCompressWizard) Run(ctx context.Context) error {
@@ -107,14 +116,14 @@ func (w *PDFCompressWizard) Run(ctx context.Context) error {
 				).
 				Value(&state.Preset),
 			huh.NewInput().
-				Title("Output PDF path").
-				Value(&state.OutputPath).
+				Title("Output folder").
+				Value(&state.OutputDir).
 				Validate(func(v string) error {
 					path := NormalizePath(v)
 					if path == "" {
-						return fmt.Errorf("output path is required")
+						return fmt.Errorf("output folder is required")
 					}
-					return validation.EnsureSupportedExtension(path, []string{"pdf"})
+					return nil
 				}),
 		),
 	)
@@ -123,7 +132,13 @@ func (w *PDFCompressWizard) Run(ctx context.Context) error {
 	}
 
 	state.InputPath = NormalizePath(state.InputPath)
-	state.OutputPath = NormalizePath(state.OutputPath)
+	state.OutputDir = NormalizePath(state.OutputDir)
+
+	outputPath, err := outputpkg.ResolveOutputPath(state.InputPath, "", state.OutputDir, "-compressed", "pdf", true)
+	if err != nil {
+		return ValidationError{Err: err}
+	}
+	state.OutputPath = outputPath
 
 	force, err := confirmOverwrite(state.OutputPath)
 	if err != nil {
@@ -140,7 +155,10 @@ func (w *PDFCompressWizard) Run(ctx context.Context) error {
 		return ErrCancelled
 	}
 
-	return w.Execute(ctx, state)
+	if err := w.Execute(ctx, state); err != nil {
+		return err
+	}
+	return printSuccess(w.stdout, state.OutputPath)
 }
 
 func (w *PDFCompressWizard) Execute(ctx context.Context, in PDFCompressInput) error {
@@ -188,14 +206,14 @@ func (w *PDFMergeWizard) Run(ctx context.Context) error {
 					return nil
 				}),
 			huh.NewInput().
-				Title("Output PDF path").
-				Value(&state.OutputPath).
+				Title("Output folder").
+				Value(&state.OutputDir).
 				Validate(func(v string) error {
 					path := NormalizePath(v)
 					if path == "" {
-						return fmt.Errorf("output path is required")
+						return fmt.Errorf("output folder is required")
 					}
-					return validation.EnsureSupportedExtension(path, []string{"pdf"})
+					return nil
 				}),
 		),
 	)
@@ -208,7 +226,13 @@ func (w *PDFMergeWizard) Run(ctx context.Context) error {
 		return ValidationError{Err: err}
 	}
 	state.InputPaths = paths
-	state.OutputPath = NormalizePath(state.OutputPath)
+	state.OutputDir = NormalizePath(state.OutputDir)
+
+	outputPath, err := outputpkg.ResolveOutputPath("merged.pdf", "", state.OutputDir, "", "pdf", true)
+	if err != nil {
+		return ValidationError{Err: err}
+	}
+	state.OutputPath = outputPath
 
 	force, err := confirmOverwrite(state.OutputPath)
 	if err != nil {
@@ -225,7 +249,10 @@ func (w *PDFMergeWizard) Run(ctx context.Context) error {
 		return ErrCancelled
 	}
 
-	return w.Execute(ctx, state)
+	if err := w.Execute(ctx, state); err != nil {
+		return err
+	}
+	return printSuccess(w.stdout, state.OutputPath)
 }
 
 func (w *PDFMergeWizard) Execute(ctx context.Context, in PDFMergeInput) error {
@@ -272,14 +299,14 @@ func (w *PDFSplitWizard) Run(ctx context.Context) error {
 					return err
 				}),
 			huh.NewInput().
-				Title("Output PDF path").
-				Value(&state.OutputPath).
+				Title("Output folder").
+				Value(&state.OutputDir).
 				Validate(func(v string) error {
 					path := NormalizePath(v)
 					if path == "" {
-						return fmt.Errorf("output path is required")
+						return fmt.Errorf("output folder is required")
 					}
-					return validation.EnsureSupportedExtension(path, []string{"pdf"})
+					return nil
 				}),
 		),
 	)
@@ -288,8 +315,14 @@ func (w *PDFSplitWizard) Run(ctx context.Context) error {
 	}
 
 	state.InputPath = NormalizePath(state.InputPath)
-	state.OutputPath = NormalizePath(state.OutputPath)
+	state.OutputDir = NormalizePath(state.OutputDir)
 	state.PageRange = strings.TrimSpace(state.PageRange)
+
+	outputPath, err := outputpkg.ResolveOutputPath(state.InputPath, "", state.OutputDir, "-pages-"+outputpkg.SanitizeFilenamePart(state.PageRange), "pdf", true)
+	if err != nil {
+		return ValidationError{Err: err}
+	}
+	state.OutputPath = outputPath
 
 	force, err := confirmOverwrite(state.OutputPath)
 	if err != nil {
@@ -306,7 +339,10 @@ func (w *PDFSplitWizard) Run(ctx context.Context) error {
 		return ErrCancelled
 	}
 
-	return w.Execute(ctx, state)
+	if err := w.Execute(ctx, state); err != nil {
+		return err
+	}
+	return printSuccess(w.stdout, state.OutputPath)
 }
 
 func (w *PDFSplitWizard) Execute(ctx context.Context, in PDFSplitInput) error {
@@ -361,7 +397,7 @@ func (w *PDFInfoWizard) Run(ctx context.Context) error {
 }
 
 func (w *PDFInfoWizard) Execute(ctx context.Context, in PDFInfoInput) error {
-	_, err := w.service.Info(ctx, pdf.InfoRequest{
+	info, err := w.service.Info(ctx, pdf.InfoRequest{
 		InputPath: NormalizePath(in.InputPath),
 	})
 	if err != nil {
@@ -372,6 +408,12 @@ func (w *PDFInfoWizard) Execute(ctx context.Context, in PDFInfoInput) error {
 			return DependencyError{Err: err}
 		}
 		return err
+	}
+	if w.stdout != nil {
+		if info.Pages != nil {
+			_, _ = fmt.Fprintf(w.stdout, "Pages: %d\n", *info.Pages)
+		}
+		_, _ = fmt.Fprintln(w.stdout, info.RawOutput)
 	}
 	return nil
 }

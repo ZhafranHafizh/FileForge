@@ -3,9 +3,10 @@ package interactive
 import (
 	"context"
 	"fmt"
-	"os"
+	"io"
 
 	"fileforge/internal/compress"
+	outputpkg "fileforge/internal/output"
 	"fileforge/internal/validation"
 
 	"charm.land/huh/v2"
@@ -17,17 +18,19 @@ type imageCompressService interface {
 
 type CompressWizard struct {
 	service imageCompressService
+	stdout  io.Writer
 }
 
 type CompressInput struct {
 	InputPath  string
+	OutputDir  string
 	OutputPath string
 	Quality    int
 	Force      bool
 }
 
-func NewCompressWizard(service imageCompressService) *CompressWizard {
-	return &CompressWizard{service: service}
+func NewCompressWizard(service imageCompressService, stdout io.Writer) *CompressWizard {
+	return &CompressWizard{service: service, stdout: stdout}
 }
 
 func (w *CompressWizard) Run(ctx context.Context) error {
@@ -51,11 +54,11 @@ func (w *CompressWizard) Run(ctx context.Context) error {
 					return validation.EnsureSupportedExtension(path, []string{"jpg", "jpeg", "png", "webp"})
 				}),
 			huh.NewInput().
-				Title("Output path").
-				Value(&state.OutputPath).
+				Title("Output folder").
+				Value(&state.OutputDir).
 				Validate(func(v string) error {
 					if NormalizePath(v) == "" {
-						return fmt.Errorf("output path is required")
+						return fmt.Errorf("output folder is required")
 					}
 					return nil
 				}),
@@ -78,7 +81,13 @@ func (w *CompressWizard) Run(ctx context.Context) error {
 	}
 
 	state.InputPath = NormalizePath(state.InputPath)
-	state.OutputPath = NormalizePath(state.OutputPath)
+	state.OutputDir = NormalizePath(state.OutputDir)
+
+	outputPath, err := outputpkg.ResolveOutputPath(state.InputPath, "", state.OutputDir, "-compressed", validation.Extension(state.InputPath), true)
+	if err != nil {
+		return ValidationError{Err: err}
+	}
+	state.OutputPath = outputPath
 
 	if force, err := confirmOverwrite(state.OutputPath); err != nil {
 		return err
@@ -95,7 +104,10 @@ func (w *CompressWizard) Run(ctx context.Context) error {
 		return ErrCancelled
 	}
 
-	return w.Execute(ctx, state)
+	if err := w.Execute(ctx, state); err != nil {
+		return err
+	}
+	return printSuccess(w.stdout, state.OutputPath)
 }
 
 func (w *CompressWizard) Execute(ctx context.Context, in CompressInput) error {
@@ -127,9 +139,4 @@ func parseQuality(raw string) (int, error) {
 		return 0, fmt.Errorf("quality must be between 1 and 100")
 	}
 	return value, nil
-}
-
-func outputExists(path string) bool {
-	_, err := os.Stat(path)
-	return err == nil
 }

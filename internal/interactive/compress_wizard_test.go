@@ -21,7 +21,7 @@ func (f *fakeCompressor) Compress(_ context.Context, req compress.ImageCompressR
 
 func TestCompressWizardExecuteUsesService(t *testing.T) {
 	svc := &fakeCompressor{}
-	wizard := NewCompressWizard(svc)
+	wizard := NewCompressWizard(svc, nil)
 
 	err := wizard.Execute(context.Background(), CompressInput{
 		InputPath:  `"./input.jpg"`,

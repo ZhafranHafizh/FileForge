@@ -3,7 +3,7 @@ APP_NAME=fileforge
 .PHONY: build run test fmt vet clean
 
 build:
-	go build -o bin/$(APP_NAME) .
+	go build -buildvcs=false -o bin/$(APP_NAME) .
 
 run:
 	go run .

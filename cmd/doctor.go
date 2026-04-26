@@ -47,11 +47,11 @@ func runDoctor(ctx context.Context, run *runner.Runner, out io.Writer) error {
 
 		for _, result := range report.Results {
 			if result.Available {
-				_, _ = fmt.Fprintf(out, "[OK] %s %s\n", result.Name, result.Version)
+				_, _ = fmt.Fprintf(out, "[OK] %s %s %s\n", result.Name, result.Version, toolPurpose(result.Name))
 				continue
 			}
 
-			_, _ = fmt.Fprintf(out, "[Missing] %s\n", result.Name)
+			_, _ = fmt.Fprintf(out, "[Missing] %s %s\n", result.Name, toolPurpose(result.Name))
 		}
 
 		if len(report.Missing) > 0 {
@@ -68,7 +68,7 @@ func runDoctor(ctx context.Context, run *runner.Runner, out io.Writer) error {
 
 		_, _ = fmt.Fprintln(out, "Status:")
 		if len(report.Missing) == 0 {
-			_, _ = fmt.Fprintln(out, "Ready for Milestone 2 features.")
+			_, _ = fmt.Fprintln(out, "Ready for currently implemented image and PDF features.")
 		} else {
 			_, _ = fmt.Fprintln(out, "Missing required dependencies.")
 		}
@@ -118,5 +118,22 @@ func diagnoseRequiredTools(ctx context.Context, run *runner.Runner) engine.Repor
 	return engine.Report{
 		Results: results,
 		Missing: missing,
+	}
+}
+
+func toolPurpose(name string) string {
+	switch name {
+	case "magick":
+		return "required for image conversion, image compression, image to PDF"
+	case "qpdf":
+		return "required for PDF merge and PDF split"
+	case "gs":
+		return "required for PDF compression"
+	case "pdftoppm":
+		return "required for PDF to image"
+	case "pdfinfo":
+		return "required for PDF info"
+	default:
+		return ""
 	}
 }

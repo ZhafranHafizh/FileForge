@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"fileforge/internal/convert"
+	outputpkg "fileforge/internal/output"
 	"fileforge/internal/validation"
 
 	"charm.land/huh/v2"
@@ -26,11 +27,11 @@ func (w *PDFToImageWizard) Run(ctx context.Context) error {
 				Value(&state.InputPath).
 				Validate(func(v string) error { return validatePDFPath(NormalizePath(v)) }),
 			huh.NewInput().
-				Title("Output directory").
+				Title("Output folder").
 				Value(&state.OutputDir).
 				Validate(func(v string) error {
 					if NormalizePath(v) == "" {
-						return fmt.Errorf("output directory is required")
+						return fmt.Errorf("output folder is required")
 					}
 					return nil
 				}),
@@ -82,17 +83,30 @@ func (w *PDFToImageWizard) Run(ctx context.Context) error {
 
 	state.InputPath = NormalizePath(state.InputPath)
 	state.OutputDir = NormalizePath(state.OutputDir)
+	generatedDir, err := outputpkg.ResolveOutputDir("", state.OutputDir, outputpkg.GeneratedPDFToImageDirName(state.InputPath))
+	if err != nil {
+		return ValidationError{Err: err}
+	}
+	state.OutputDir = generatedDir
+	force, err := confirmGeneratedDirOverwrite(state.OutputDir, state.ToFormat)
+	if err != nil {
+		return err
+	}
+	state.Force = force
 
 	var confirm bool
-	summary := fmt.Sprintf("PDF to Image\nInput: %s\nOutput directory: %s\nFormat: %s\nDPI: %d\nFirst page: %s\nLast page: %s",
-		state.InputPath, state.OutputDir, state.ToFormat, state.DPI, emptyAsAuto(state.FirstPage), emptyAsAuto(state.LastPage))
+	summary := fmt.Sprintf("PDF to Image\nInput: %s\nOutput directory: %s\nFormat: %s\nDPI: %d\nFirst page: %s\nLast page: %s\nOverwrite: %t",
+		state.InputPath, state.OutputDir, state.ToFormat, state.DPI, emptyAsAuto(state.FirstPage), emptyAsAuto(state.LastPage), state.Force)
 	if err := huh.NewConfirm().Title(summary).Affirmative("Run").Negative("Cancel").Value(&confirm).Run(); err != nil {
 		return cancelIfInterrupted(err)
 	}
 	if !confirm {
 		return ErrCancelled
 	}
-	return w.Execute(ctx, state)
+	if err := w.Execute(ctx, state); err != nil {
+		return err
+	}
+	return printSuccess(w.stdout, state.OutputDir)
 }
 
 func (w *PDFToImageWizard) Execute(ctx context.Context, in PDFToImageInput) error {
@@ -103,6 +117,7 @@ func (w *PDFToImageWizard) Execute(ctx context.Context, in PDFToImageInput) erro
 		DPI:       in.DPI,
 		FirstPage: in.FirstPage,
 		LastPage:  in.LastPage,
+		Force:     in.Force,
 	})
 	if err != nil {
 		if convert.IsValidationError(err) {
@@ -135,14 +150,14 @@ func (w *ImageToPDFWizard) Run(ctx context.Context) error {
 					return validation.EnsureSupportedExtension(path, []string{"jpg", "jpeg", "png", "webp"})
 				}),
 			huh.NewInput().
-				Title("Output PDF path").
-				Value(&state.OutputPath).
+				Title("Output folder").
+				Value(&state.OutputDir).
 				Validate(func(v string) error {
 					path := NormalizePath(v)
 					if path == "" {
-						return fmt.Errorf("output path is required")
+						return fmt.Errorf("output folder is required")
 					}
-					return validation.EnsureSupportedExtension(path, []string{"pdf"})
+					return nil
 				}),
 		),
 	)
@@ -151,7 +166,12 @@ func (w *ImageToPDFWizard) Run(ctx context.Context) error {
 	}
 
 	state.InputPath = NormalizePath(state.InputPath)
-	state.OutputPath = NormalizePath(state.OutputPath)
+	state.OutputDir = NormalizePath(state.OutputDir)
+	outputPath, err := outputpkg.ResolveOutputPath(state.InputPath, "", state.OutputDir, "", "pdf", true)
+	if err != nil {
+		return ValidationError{Err: err}
+	}
+	state.OutputPath = outputPath
 
 	force, err := confirmOverwrite(state.OutputPath)
 	if err != nil {
@@ -167,7 +187,10 @@ func (w *ImageToPDFWizard) Run(ctx context.Context) error {
 	if !confirm {
 		return ErrCancelled
 	}
-	return w.Execute(ctx, state)
+	if err := w.Execute(ctx, state); err != nil {
+		return err
+	}
+	return printSuccess(w.stdout, state.OutputPath)
 }
 
 func (w *ImageToPDFWizard) Execute(ctx context.Context, in ImageToPDFInput) error {

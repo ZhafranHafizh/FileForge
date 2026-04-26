@@ -64,14 +64,14 @@ type App struct {
 
 func NewApp(opts Options) *App {
 	return &App{
-		convertWizard:  NewConvertWizard(convert.NewImageConverter(opts.Runner)),
-		pdfToImage:     NewPDFToImageWizard(convert.NewPDFToImageConverter(opts.Runner)),
-		imageToPDF:     NewImageToPDFWizard(convert.NewImageToPDFConverter(opts.Runner)),
-		compressWizard: NewCompressWizard(compress.NewImageCompressor(opts.Runner)),
-		pdfCompress:    NewPDFCompressWizard(compress.NewPDFCompressor(opts.Runner)),
-		pdfMerge:       NewPDFMergeWizard(pdf.NewMerger(opts.Runner)),
-		pdfSplit:       NewPDFSplitWizard(pdf.NewSplitter(opts.Runner)),
-		pdfInfo:        NewPDFInfoWizard(pdf.NewInspector(opts.Runner)),
+		convertWizard:  NewConvertWizard(convert.NewImageConverter(opts.Runner), opts.Stdout),
+		pdfToImage:     NewPDFToImageWizard(convert.NewPDFToImageConverter(opts.Runner), opts.Stdout),
+		imageToPDF:     NewImageToPDFWizard(convert.NewImageToPDFConverter(opts.Runner), opts.Stdout),
+		compressWizard: NewCompressWizard(compress.NewImageCompressor(opts.Runner), opts.Stdout),
+		pdfCompress:    NewPDFCompressWizard(compress.NewPDFCompressor(opts.Runner), opts.Stdout),
+		pdfMerge:       NewPDFMergeWizard(pdf.NewMerger(opts.Runner), opts.Stdout),
+		pdfSplit:       NewPDFSplitWizard(pdf.NewSplitter(opts.Runner), opts.Stdout),
+		pdfInfo:        NewPDFInfoWizard(pdf.NewInspector(opts.Runner), opts.Stdout),
 		doctor:         opts.Doctor,
 		stdout:         opts.Stdout,
 		accessibleUI:   opts.AccessibleUI,
