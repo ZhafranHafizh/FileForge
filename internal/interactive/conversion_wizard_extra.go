@@ -89,14 +89,17 @@ func (w *PDFToImageWizard) Run(ctx context.Context) error {
 	}
 	state.Force = force
 
-	var confirm bool
-	summary := fmt.Sprintf("PDF to Image\nInput: %s\nOutput directory: %s\nFormat: %s\nDPI: %d\nFirst page: %s\nLast page: %s\nOverwrite: %t",
-		state.InputPath, state.OutputDir, state.ToFormat, state.DPI, emptyAsAuto(state.FirstPage), emptyAsAuto(state.LastPage), state.Force)
-	if err := huh.NewConfirm().Title(summary).Affirmative("Run").Negative("Cancel").Value(&confirm).Run(); err != nil {
-		return cancelIfInterrupted(err)
-	}
-	if !confirm {
-		return ErrCancelled
+	if _, err := confirmSummary(w.stdout, []SummaryRow{
+		{Label: "Action", Value: "PDF to Image"},
+		{Label: "Input", Value: state.InputPath},
+		{Label: "Output", Value: state.OutputDir},
+		{Label: "Format", Value: state.ToFormat},
+		{Label: "DPI", Value: strconv.Itoa(state.DPI)},
+		{Label: "First page", Value: emptyAsAuto(state.FirstPage)},
+		{Label: "Last page", Value: emptyAsAuto(state.LastPage)},
+		{Label: "Overwrite", Value: boolText(state.Force)},
+	}); err != nil {
+		return err
 	}
 	if err := w.Execute(ctx, state); err != nil {
 		return err
@@ -168,13 +171,13 @@ func (w *ImageToPDFWizard) Run(ctx context.Context) error {
 	}
 	state.Force = force
 
-	var confirm bool
-	summary := fmt.Sprintf("Image to PDF\nInput: %s\nOutput: %s\nOverwrite: %t", state.InputPath, state.OutputPath, state.Force)
-	if err := huh.NewConfirm().Title(summary).Affirmative("Run").Negative("Cancel").Value(&confirm).Run(); err != nil {
-		return cancelIfInterrupted(err)
-	}
-	if !confirm {
-		return ErrCancelled
+	if _, err := confirmSummary(w.stdout, []SummaryRow{
+		{Label: "Action", Value: "Image to PDF"},
+		{Label: "Input", Value: state.InputPath},
+		{Label: "Output", Value: state.OutputPath},
+		{Label: "Overwrite", Value: boolText(state.Force)},
+	}); err != nil {
+		return err
 	}
 	if err := w.Execute(ctx, state); err != nil {
 		return err

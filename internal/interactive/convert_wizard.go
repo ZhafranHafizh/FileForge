@@ -129,13 +129,14 @@ func (w *ConvertWizard) Run(ctx context.Context) error {
 		state.Force = force
 	}
 
-	var confirm bool
-	summary := fmt.Sprintf("Convert\nInput: %s\nFormat: %s\nOutput: %s\nOverwrite: %t", state.InputPath, state.ToFormat, state.OutputPath, state.Force)
-	if err := huh.NewConfirm().Title(summary).Affirmative("Run").Negative("Cancel").Value(&confirm).Run(); err != nil {
-		return cancelIfInterrupted(err)
-	}
-	if !confirm {
-		return ErrCancelled
+	if _, err := confirmSummary(w.stdout, []SummaryRow{
+		{Label: "Action", Value: "Image to Image"},
+		{Label: "Input", Value: state.InputPath},
+		{Label: "Output", Value: state.OutputPath},
+		{Label: "Format", Value: state.ToFormat},
+		{Label: "Overwrite", Value: boolText(state.Force)},
+	}); err != nil {
+		return err
 	}
 
 	if err := w.Execute(ctx, state); err != nil {

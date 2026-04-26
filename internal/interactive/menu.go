@@ -20,25 +20,15 @@ type ValidationError struct {
 	Err error
 }
 
-func (e ValidationError) Error() string {
-	return e.Err.Error()
-}
-
-func (e ValidationError) Unwrap() error {
-	return e.Err
-}
+func (e ValidationError) Error() string { return e.Err.Error() }
+func (e ValidationError) Unwrap() error { return e.Err }
 
 type DependencyError struct {
 	Err error
 }
 
-func (e DependencyError) Error() string {
-	return e.Err.Error()
-}
-
-func (e DependencyError) Unwrap() error {
-	return e.Err
-}
+func (e DependencyError) Error() string { return e.Err.Error() }
+func (e DependencyError) Unwrap() error { return e.Err }
 
 type Options struct {
 	Runner       *runner.Runner
@@ -62,6 +52,11 @@ type App struct {
 	accessibleUI   bool
 }
 
+type menuChoice struct {
+	Label string
+	Value string
+}
+
 func NewApp(opts Options) *App {
 	return &App{
 		convertWizard:  NewConvertWizard(convert.NewImageConverter(opts.Runner), opts.Stdout),
@@ -79,6 +74,11 @@ func NewApp(opts Options) *App {
 }
 
 func (a *App) Run(ctx context.Context) error {
+	if a.stdout != nil {
+		_, _ = fmt.Fprintln(a.stdout, RenderHeader())
+		_, _ = fmt.Fprintln(a.stdout)
+	}
+
 	for {
 		choice, err := a.promptMainMenu()
 		if err != nil {
@@ -86,56 +86,34 @@ func (a *App) Run(ctx context.Context) error {
 		}
 
 		switch choice {
-		case "convert_image":
-			if err := a.convertWizard.Run(ctx); err != nil && !IsCancelled(err) {
-				return err
-			}
-		case "compress_image":
-			if err := a.compressWizard.Run(ctx); err != nil && !IsCancelled(err) {
-				return err
-			}
-		case "pdf_to_image":
-			if err := a.pdfToImage.Run(ctx); err != nil && !IsCancelled(err) {
-				return err
-			}
-		case "image_to_pdf":
-			if err := a.imageToPDF.Run(ctx); err != nil && !IsCancelled(err) {
-				return err
-			}
-		case "doctor":
-			if a.doctor != nil {
-				if err := a.doctor(ctx, a.stdout); err != nil {
-					return err
-				}
-			}
-		case "pdf_tools":
-			pdfChoice, err := a.promptPDFMenu()
+		case "convert":
+			subChoice, err := a.promptMenu("Convert", "Convert images, PDFs, and supported file formats.", convertMenuChoices())
 			if err != nil {
 				return cancelIfInterrupted(err)
 			}
-			if err := a.runPDFChoice(ctx, pdfChoice); err != nil && !IsCancelled(err) {
-				return err
+			a.handleInteractiveResult(a.runConvertChoice(ctx, subChoice))
+		case "compress":
+			subChoice, err := a.promptMenu("Compress", "Reduce image or PDF file size.", compressMenuChoices())
+			if err != nil {
+				return cancelIfInterrupted(err)
 			}
-		case "pdf_compress":
-			if err := a.pdfCompress.Run(ctx); err != nil && !IsCancelled(err) {
-				return err
+			a.handleInteractiveResult(a.runCompressChoice(ctx, subChoice))
+		case "pdf_tools":
+			subChoice, err := a.promptMenu("PDF Tools", "Merge, split, inspect, and optimize PDFs.", pdfMenuChoices())
+			if err != nil {
+				return cancelIfInterrupted(err)
 			}
-		case "pdf_merge":
-			if err := a.pdfMerge.Run(ctx); err != nil && !IsCancelled(err) {
-				return err
+			a.handleInteractiveResult(a.runPDFChoice(ctx, subChoice))
+		case "doctor":
+			if a.doctor != nil {
+				a.handleInteractiveResult(a.doctor(ctx, a.stdout))
 			}
-		case "pdf_split":
-			if err := a.pdfSplit.Run(ctx); err != nil && !IsCancelled(err) {
-				return err
+		case "coming_soon":
+			subChoice, err := a.promptMenu("Coming Soon", "Preview features planned for future releases.", comingSoonMenuChoices())
+			if err != nil {
+				return cancelIfInterrupted(err)
 			}
-		case "pdf_info":
-			if err := a.pdfInfo.Run(ctx); err != nil && !IsCancelled(err) {
-				return err
-			}
-		case "ocr", "office":
-			if err := showNotImplemented("This feature is not implemented yet."); err != nil {
-				return err
-			}
+			a.handleInteractiveResult(a.runComingSoonChoice(subChoice))
 		case "exit":
 			return nil
 		}
@@ -143,61 +121,85 @@ func (a *App) Run(ctx context.Context) error {
 }
 
 func (a *App) promptMainMenu() (string, error) {
+	return a.promptMenu("What would you like to do?", "Choose a workflow to continue.", topLevelMenuChoices())
+}
+
+func (a *App) promptMenu(title string, help string, choices []menuChoice) (string, error) {
+	if a.stdout != nil {
+		_, _ = fmt.Fprintln(a.stdout, RenderSection(title))
+		_, _ = fmt.Fprintln(a.stdout, RenderHelp(help))
+	}
+
 	var choice string
 	err := huh.NewSelect[string]().
-		Title("Choose an action").
-		Options(
-			huh.NewOption("Convert file", "convert_image"),
-			huh.NewOption("Compress file", "compress_image"),
-			huh.NewOption("PDF tools", "pdf_tools"),
-			huh.NewOption("PDF to Image", "pdf_to_image"),
-			huh.NewOption("Image to PDF", "image_to_pdf"),
-			huh.NewOption("PDF Compress", "pdf_compress"),
-			huh.NewOption("PDF Merge", "pdf_merge"),
-			huh.NewOption("PDF Split", "pdf_split"),
-			huh.NewOption("PDF Info", "pdf_info"),
-			huh.NewOption("Doctor / Check dependencies", "doctor"),
-			huh.NewOption("OCR", "ocr"),
-			huh.NewOption("Office conversion", "office"),
-			huh.NewOption("Exit", "exit"),
-		).
+		Title("").
+		Options(buildHuhOptions(choices)...).
 		Value(&choice).
 		Run()
 	return choice, err
 }
 
-func (a *App) promptPDFMenu() (string, error) {
-	var choice string
-	err := huh.NewSelect[string]().
-		Title("Choose a PDF action").
-		Options(
-			huh.NewOption("PDF Compress", "pdf_compress"),
-			huh.NewOption("PDF Merge", "pdf_merge"),
-			huh.NewOption("PDF Split", "pdf_split"),
-			huh.NewOption("PDF Info", "pdf_info"),
-			huh.NewOption("PDF to Image", "pdf_to_image"),
-			huh.NewOption("Image to PDF", "image_to_pdf"),
-			huh.NewOption("Back", "back"),
-		).
-		Value(&choice).
-		Run()
-	return choice, err
+func buildHuhOptions(choices []menuChoice) []huh.Option[string] {
+	options := make([]huh.Option[string], 0, len(choices))
+	for _, choice := range choices {
+		options = append(options, huh.NewOption(choice.Label, choice.Value))
+	}
+	return options
 }
 
-func (a *App) runPDFChoice(ctx context.Context, choice string) error {
+func topLevelMenuChoices() []menuChoice {
+	return []menuChoice{
+		{Label: "Convert", Value: "convert"},
+		{Label: "Compress", Value: "compress"},
+		{Label: "PDF Tools", Value: "pdf_tools"},
+		{Label: "System Check", Value: "doctor"},
+		{Label: "Coming Soon", Value: "coming_soon"},
+		{Label: "Exit", Value: "exit"},
+	}
+}
+
+func convertMenuChoices() []menuChoice {
+	return []menuChoice{
+		{Label: "Image to Image", Value: "image_to_image"},
+		{Label: "PDF to Image", Value: "pdf_to_image"},
+		{Label: "Image to PDF", Value: "image_to_pdf"},
+		{Label: "Back", Value: "back"},
+	}
+}
+
+func compressMenuChoices() []menuChoice {
+	return []menuChoice{
+		{Label: "Image Compression", Value: "image_compression"},
+		{Label: "PDF Compression", Value: "pdf_compression"},
+		{Label: "Back", Value: "back"},
+	}
+}
+
+func pdfMenuChoices() []menuChoice {
+	return []menuChoice{
+		{Label: "Merge PDFs", Value: "pdf_merge"},
+		{Label: "Split PDF", Value: "pdf_split"},
+		{Label: "PDF Info", Value: "pdf_info"},
+		{Label: "Back", Value: "back"},
+	}
+}
+
+func comingSoonMenuChoices() []menuChoice {
+	return []menuChoice{
+		{Label: "OCR", Value: "ocr"},
+		{Label: "Office Conversion", Value: "office_conversion"},
+		{Label: "Metadata Cleanup", Value: "metadata_cleanup"},
+		{Label: "Back", Value: "back"},
+	}
+}
+
+func (a *App) runConvertChoice(ctx context.Context, choice string) error {
 	switch choice {
-	case "pdf_compress":
-		return a.pdfCompress.Run(ctx)
-	case "pdf_merge":
-		return a.pdfMerge.Run(ctx)
-	case "pdf_split":
-		return a.pdfSplit.Run(ctx)
-	case "pdf_info":
-		return a.pdfInfo.Run(ctx)
-	case "pdf_to_image", "image_to_pdf":
-		if choice == "pdf_to_image" {
-			return a.pdfToImage.Run(ctx)
-		}
+	case "image_to_image":
+		return a.convertWizard.Run(ctx)
+	case "pdf_to_image":
+		return a.pdfToImage.Run(ctx)
+	case "image_to_pdf":
 		return a.imageToPDF.Run(ctx)
 	case "back":
 		return nil
@@ -206,16 +208,64 @@ func (a *App) runPDFChoice(ctx context.Context, choice string) error {
 	}
 }
 
-func showNotImplemented(message string) error {
-	var confirm bool
-	return cancelIfInterrupted(
-		huh.NewConfirm().
-			Title(message).
-			Affirmative("OK").
-			Negative("OK").
-			Value(&confirm).
-			Run(),
-	)
+func (a *App) runCompressChoice(ctx context.Context, choice string) error {
+	switch choice {
+	case "image_compression":
+		return a.compressWizard.Run(ctx)
+	case "pdf_compression":
+		return a.pdfCompress.Run(ctx)
+	case "back":
+		return nil
+	default:
+		return nil
+	}
+}
+
+func (a *App) runPDFChoice(ctx context.Context, choice string) error {
+	switch choice {
+	case "pdf_merge":
+		return a.pdfMerge.Run(ctx)
+	case "pdf_split":
+		return a.pdfSplit.Run(ctx)
+	case "pdf_info":
+		return a.pdfInfo.Run(ctx)
+	case "pdf_compression":
+		return a.pdfCompress.Run(ctx)
+	case "back":
+		return nil
+	default:
+		return nil
+	}
+}
+
+func (a *App) runComingSoonChoice(choice string) error {
+	switch choice {
+	case "ocr":
+		return a.printBlock(RenderComingSoon("OCR"))
+	case "office_conversion":
+		return a.printBlock(RenderComingSoon("Office Conversion"))
+	case "metadata_cleanup":
+		return a.printBlock(RenderComingSoon("Metadata Cleanup"))
+	case "back":
+		return nil
+	default:
+		return nil
+	}
+}
+
+func (a *App) printBlock(value string) error {
+	if a.stdout != nil {
+		_, _ = fmt.Fprintln(a.stdout, value)
+		_, _ = fmt.Fprintln(a.stdout)
+	}
+	return nil
+}
+
+func (a *App) handleInteractiveResult(err error) {
+	if err == nil || IsCancelled(err) {
+		return
+	}
+	_ = a.printBlock(RenderError(err))
 }
 
 func IsCancelled(err error) bool {

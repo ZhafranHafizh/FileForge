@@ -90,13 +90,14 @@ func (w *CompressWizard) Run(ctx context.Context) error {
 		state.Force = force
 	}
 
-	var confirm bool
-	summary := fmt.Sprintf("Compress\nInput: %s\nOutput: %s\nQuality: %d\nOverwrite: %t", state.InputPath, state.OutputPath, state.Quality, state.Force)
-	if err := huh.NewConfirm().Title(summary).Affirmative("Run").Negative("Cancel").Value(&confirm).Run(); err != nil {
-		return cancelIfInterrupted(err)
-	}
-	if !confirm {
-		return ErrCancelled
+	if _, err := confirmSummary(w.stdout, []SummaryRow{
+		{Label: "Action", Value: "Image Compression"},
+		{Label: "Input", Value: state.InputPath},
+		{Label: "Output", Value: state.OutputPath},
+		{Label: "Quality", Value: fmt.Sprintf("%d", state.Quality)},
+		{Label: "Overwrite", Value: boolText(state.Force)},
+	}); err != nil {
+		return err
 	}
 
 	if err := w.Execute(ctx, state); err != nil {

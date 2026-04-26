@@ -140,13 +140,14 @@ func (w *PDFCompressWizard) Run(ctx context.Context) error {
 	}
 	state.Force = force
 
-	var confirm bool
-	summary := fmt.Sprintf("PDF Compress\nInput: %s\nPreset: %s\nOutput: %s\nOverwrite: %t", state.InputPath, state.Preset, state.OutputPath, state.Force)
-	if err := huh.NewConfirm().Title(summary).Affirmative("Run").Negative("Cancel").Value(&confirm).Run(); err != nil {
-		return cancelIfInterrupted(err)
-	}
-	if !confirm {
-		return ErrCancelled
+	if _, err := confirmSummary(w.stdout, []SummaryRow{
+		{Label: "Action", Value: "PDF Compression"},
+		{Label: "Input", Value: state.InputPath},
+		{Label: "Output", Value: state.OutputPath},
+		{Label: "Preset", Value: state.Preset},
+		{Label: "Overwrite", Value: boolText(state.Force)},
+	}); err != nil {
+		return err
 	}
 
 	if err := w.Execute(ctx, state); err != nil {
@@ -228,13 +229,13 @@ func (w *PDFMergeWizard) Run(ctx context.Context) error {
 	}
 	state.Force = force
 
-	var confirm bool
-	summary := fmt.Sprintf("PDF Merge\nInputs:\n- %s\nOutput: %s\nOverwrite: %t", strings.Join(state.InputPaths, "\n- "), state.OutputPath, state.Force)
-	if err := huh.NewConfirm().Title(summary).Affirmative("Run").Negative("Cancel").Value(&confirm).Run(); err != nil {
-		return cancelIfInterrupted(err)
-	}
-	if !confirm {
-		return ErrCancelled
+	if _, err := confirmSummary(w.stdout, []SummaryRow{
+		{Label: "Action", Value: "Merge PDFs"},
+		{Label: "Inputs", Value: strings.Join(state.InputPaths, "\n")},
+		{Label: "Output", Value: state.OutputPath},
+		{Label: "Overwrite", Value: boolText(state.Force)},
+	}); err != nil {
+		return err
 	}
 
 	if err := w.Execute(ctx, state); err != nil {
@@ -312,13 +313,14 @@ func (w *PDFSplitWizard) Run(ctx context.Context) error {
 	}
 	state.Force = force
 
-	var confirm bool
-	summary := fmt.Sprintf("PDF Split\nInput: %s\nPages: %s\nOutput: %s\nOverwrite: %t", state.InputPath, state.PageRange, state.OutputPath, state.Force)
-	if err := huh.NewConfirm().Title(summary).Affirmative("Run").Negative("Cancel").Value(&confirm).Run(); err != nil {
-		return cancelIfInterrupted(err)
-	}
-	if !confirm {
-		return ErrCancelled
+	if _, err := confirmSummary(w.stdout, []SummaryRow{
+		{Label: "Action", Value: "Split PDF"},
+		{Label: "Input", Value: state.InputPath},
+		{Label: "Pages", Value: state.PageRange},
+		{Label: "Output", Value: state.OutputPath},
+		{Label: "Overwrite", Value: boolText(state.Force)},
+	}); err != nil {
+		return err
 	}
 
 	if err := w.Execute(ctx, state); err != nil {
@@ -366,13 +368,11 @@ func (w *PDFInfoWizard) Run(ctx context.Context) error {
 
 	state.InputPath = NormalizePath(state.InputPath)
 
-	var confirm bool
-	summary := fmt.Sprintf("PDF Info\nInput: %s", state.InputPath)
-	if err := huh.NewConfirm().Title(summary).Affirmative("Run").Negative("Cancel").Value(&confirm).Run(); err != nil {
-		return cancelIfInterrupted(err)
-	}
-	if !confirm {
-		return ErrCancelled
+	if _, err := confirmSummary(w.stdout, []SummaryRow{
+		{Label: "Action", Value: "PDF Info"},
+		{Label: "Input", Value: state.InputPath},
+	}); err != nil {
+		return err
 	}
 
 	return w.Execute(ctx, state)

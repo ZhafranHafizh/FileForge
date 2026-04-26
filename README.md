@@ -53,7 +53,7 @@ On Windows:
 go build -buildvcs=false -o bin/fileforge.exe .
 ```
 
-If Go reports a VCS stamping error such as `error obtaining VCS status`, use the `-buildvcs=false` form above. FileForge’s Makefile and helper scripts already do this.
+If Go reports a VCS stamping error such as `error obtaining VCS status`, use the `-buildvcs=false` form above. FileForge's Makefile and helper scripts already do this.
 
 ### Windows dependencies
 
@@ -169,7 +169,15 @@ Interactive mode currently supports:
 - Image to PDF
 - Doctor / dependency check
 
-Interactive flows use the same internal services as command mode. They also support drag-and-drop paths, output folder generation, overwrite confirmation, and a final confirmation step before execution.
+Interactive mode is a guided terminal wizard with grouped menus and local-first workflows. It uses the same internal services as command mode, so you get the same behavior whether you script FileForge or step through it manually.
+
+Interactive mode includes:
+
+- Grouped menus for Convert, Compress, PDF Tools, System Check, and Coming Soon
+- Drag-and-drop path support for files dropped into the terminal
+- A default output folder of `./FileForge-Output` when you leave the output prompt empty
+- Styled summaries before execution, plus overwrite confirmation and final confirmation
+- Fully local and offline processing after dependencies are installed
 
 ## Output Folder Mode
 
@@ -255,7 +263,7 @@ Example coverage:
 
 - OCR is not implemented yet
 - Office conversion is not implemented yet
-- PDF to image currently uses Poppler’s generated `page-*` filenames
+- PDF to image currently uses Poppler's generated `page-*` filenames
 - PDF to image overwrite protection is directory/prefix based
 - Release packaging is still basic
 
