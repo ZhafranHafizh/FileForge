@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./Fileforgelogo.png" alt="FileForge logo" width="720">
+</p>
+
 # FileForge
 
 Local-first, offline file conversion and compression from your terminal.
