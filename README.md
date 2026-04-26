@@ -41,6 +41,14 @@ FileForge supports both:
 - Offline-ready: after dependencies are installed, it works without internet access.
 - Practical: useful for developers, students, sysadmins, and content creators.
 
+## How FileForge Works
+
+The flowchart below shows how FileForge routes commands, checks local dependencies, processes files offline, and writes results back to your machine.
+
+<p align="center">
+  <img src="./Flowchart.png" alt="FileForge workflow flowchart" width="900">
+</p>
+
 ## Installation
 
 ### Build from source
