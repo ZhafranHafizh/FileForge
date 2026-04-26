@@ -1,22 +1,23 @@
 # FileForge
 
-FileForge is a local-first, offline-capable CLI for file conversion, compression, and PDF utilities. It wraps trusted local binaries like ImageMagick, Ghostscript, qpdf, and Poppler so files stay on your machine.
+Local-first, offline file conversion and compression from your terminal.
 
-## Local / Offline Guarantee
+![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)
+![Go](https://img.shields.io/badge/Go-1.25+-00ADD8?logo=go)
+![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)
+![Local-first](https://img.shields.io/badge/Local--first-yes-success)
+![Offline](https://img.shields.io/badge/Offline-ready-success)
 
-- No uploads
-- No cloud processing
-- No telemetry
-- No network calls during normal use
-- All processing uses local binaries already installed on your system
+FileForge is a Go-based CLI for converting, compressing, and managing files locally without uploading them to the cloud. It wraps proven local tools such as ImageMagick, Ghostscript, qpdf, and Poppler to provide a consistent command-line workflow for everyday file tasks.
 
-## Current Features
+FileForge supports both:
 
-- Image to image conversion:
-  - `jpg`
-  - `jpeg`
-  - `png`
-  - `webp`
+- command mode
+- interactive terminal wizard mode
+
+## Key Features
+
+- Image to image conversion
 - Image compression
 - PDF compression
 - PDF merge
@@ -24,34 +25,126 @@ FileForge is a local-first, offline-capable CLI for file conversion, compression
 - PDF info
 - PDF to image
 - Image to PDF
-- Interactive terminal mode
-- Dependency doctor command
+- Interactive terminal wizard
+- Output folder mode with `--output-dir`
+- Local/offline processing
 
-## Supported Commands
+## Why FileForge?
 
-### Command Mode
+- No cloud upload: files stay on your machine.
+- Privacy-friendly: useful for sensitive documents and local workflows.
+- Scriptable: predictable CLI commands for automation and shell usage.
+- Offline-ready: after dependencies are installed, it works without internet access.
+- Practical: useful for developers, students, sysadmins, and content creators.
+
+## Installation
+
+### Build from source
+
+```bash
+git clone https://github.com/YOUR_USERNAME/fileforge.git
+cd fileforge
+go build -buildvcs=false -o bin/fileforge .
+```
+
+On Windows:
+
+```powershell
+go build -buildvcs=false -o bin/fileforge.exe .
+```
+
+If Go reports a VCS stamping error such as `error obtaining VCS status`, use the `-buildvcs=false` form above. FileForge’s Makefile and helper scripts already do this.
+
+### Windows dependencies
+
+Install required local engines with `winget`:
+
+```powershell
+winget install ImageMagick.ImageMagick
+winget install ArtifexSoftware.GhostScript
+winget install QPDF.QPDF
+winget install oschwartz10612.Poppler
+```
+
+Notes:
+
+- Ghostscript may be installed as `gswin64c` or `gswin32c`.
+- FileForge checks `gs`, `gswin64c`, and `gswin32c` automatically.
+
+### macOS dependencies
+
+Install required local engines with Homebrew:
+
+```bash
+brew install imagemagick ghostscript qpdf poppler
+```
+
+### Ubuntu/Debian dependencies
+
+Install required local engines with `apt`:
+
+```bash
+sudo apt update
+sudo apt install imagemagick ghostscript qpdf poppler-utils
+```
+
+## Dependency Overview
+
+FileForge currently depends on these local binaries:
+
+- `magick`
+  - image conversion
+  - image compression
+  - image to PDF
+- Ghostscript: `gs`, `gswin64c`, or `gswin32c`
+  - PDF compression
+- `qpdf`
+  - PDF merge
+  - PDF split
+- `pdftoppm`
+  - PDF to image
+- `pdfinfo`
+  - PDF info
+
+Use `fileforge doctor` to verify your setup.
+
+## Command Mode
+
+### Convert
 
 ```bash
 fileforge convert input.png --to jpg --out output.jpg
-fileforge convert input.jpg --to webp --out output.webp
-fileforge convert input.pdf --to jpg --out ./pages
-fileforge convert input.pdf --to png --out ./pages --dpi 200 --first-page 1 --last-page 3
-fileforge convert image.jpg --to pdf --out image.pdf
+fileforge convert input.jpg --to webp --output-dir ./output
+fileforge convert input.pdf --to jpg --output-dir ./output
+fileforge convert input.pdf --to png --output-dir ./output --dpi 200 --first-page 1 --last-page 3
+fileforge convert photo.jpg --to pdf --output-dir ./output
+```
 
-fileforge compress input.jpg --quality 80 --out compressed.jpg
-fileforge compress input.pdf --preset ebook --out compressed.pdf
+### Compress
 
-fileforge pdf merge a.pdf b.pdf c.pdf --out merged.pdf
-fileforge pdf split input.pdf --pages 1-3 --out chapter.pdf
-fileforge pdf info input.pdf
+```bash
+fileforge compress image.jpg --quality 80 --output-dir ./output
+fileforge compress report.pdf --preset ebook --output-dir ./output
+```
 
+### PDF Tools
+
+```bash
+fileforge pdf merge a.pdf b.pdf --output-dir ./output
+fileforge pdf split book.pdf --pages 1-5 --output-dir ./output
+fileforge pdf info document.pdf
+```
+
+### Utilities
+
+```bash
 fileforge doctor
 fileforge version
 ```
 
-### Interactive Mode
+## Interactive Mode
 
-Start the wizard with either:
+Start the interactive wizard with either:
 
 ```bash
 go run .
@@ -76,78 +169,54 @@ Interactive mode currently supports:
 - Image to PDF
 - Doctor / dependency check
 
-Not implemented yet in interactive mode:
+Interactive flows use the same internal services as command mode. They also support drag-and-drop paths, output folder generation, overwrite confirmation, and a final confirmation step before execution.
 
-- OCR
-- Office conversion
+## Output Folder Mode
 
-## Required Local Engines
+FileForge supports both explicit output paths and generated output locations.
 
-FileForge uses these binaries for currently implemented features:
+- Use `--out` when you want to provide the exact output file or directory.
+- Use `--output-dir` when you want FileForge to generate sensible output names inside one folder.
+- Do not use both at the same time.
 
-- `magick`
-  - image conversion
-  - image compression
-  - image to PDF
-- Ghostscript: `gs`, `gswin64c`, or `gswin32c`
-  - PDF compression
-- `qpdf`
-  - PDF merge
-  - PDF split
-- `pdftoppm`
-  - PDF to image
-- `pdfinfo`
-  - PDF info
-
-## Install Dependencies
-
-### Windows
-
-Using `winget`:
-
-```powershell
-winget install ImageMagick.ImageMagick
-winget install ArtifexSoftware.GhostScript
-winget install QPDF.QPDF
-winget install oschwartz10612.Poppler
-```
-
-Ghostscript may be installed as `gswin64c` or `gswin32c`. FileForge checks those automatically.
-
-### macOS
-
-Using Homebrew:
+Examples:
 
 ```bash
-brew install imagemagick ghostscript qpdf poppler
+fileforge compress image.jpg --quality 80 --output-dir ./output
+fileforge convert photo.png --to webp --output-dir ./output
+fileforge pdf merge a.pdf b.pdf --output-dir ./output
 ```
 
-### Ubuntu / Debian
+After a successful operation, FileForge prints:
 
-Using `apt`:
+```text
+The process is complete. Please access the following path to view the results.
+<output-path>
+```
+
+## Running FileForge
+
+From source:
 
 ```bash
-sudo apt update
-sudo apt install imagemagick ghostscript qpdf poppler-utils
+go run .
 ```
 
-## Build From Source
-
-### Standard Go Build
-
-```bash
-go build -buildvcs=false -o bin/fileforge .
-```
-
-### Windows Binary
+Build and run on Windows:
 
 ```powershell
 go build -buildvcs=false -o bin/fileforge.exe .
+.\bin\fileforge.exe
 ```
 
-If you hit a VCS stamping error such as `error obtaining VCS status`, use the `-buildvcs=false` form above. The included scripts and Makefile already do this.
+Build and run on macOS/Linux:
 
-## Development Commands
+```bash
+go build -buildvcs=false -o bin/fileforge .
+./bin/fileforge
+```
+
+## Development
 
 ### Windows PowerShell
 
@@ -155,16 +224,7 @@ If you hit a VCS stamping error such as `error obtaining VCS status`, use the `-
 .\scripts\build-windows.ps1
 ```
 
-This runs:
-
-```powershell
-go fmt ./...
-go test ./...
-go vet ./...
-go build -buildvcs=false -o bin/fileforge.exe .
-```
-
-### macOS / Linux
+### macOS/Linux
 
 ```bash
 sh ./scripts/build-unix.sh
@@ -179,31 +239,11 @@ make vet
 make build
 ```
 
-## Running FileForge
+## Doctor
 
-### From source
+`fileforge doctor` checks the local engines required for currently implemented features and explains what each tool is used for.
 
-```bash
-go run .
-```
-
-### Build and run on Windows
-
-```powershell
-go build -buildvcs=false -o bin/fileforge.exe .
-.\bin\fileforge.exe
-```
-
-### Build and run on macOS / Linux
-
-```bash
-go build -buildvcs=false -o bin/fileforge .
-./bin/fileforge
-```
-
-## Doctor Output
-
-`fileforge doctor` checks all required engines for currently implemented features and explains why each tool matters. Example categories:
+Example coverage:
 
 - `magick`: image conversion, image compression, image to PDF
 - `qpdf`: PDF merge and PDF split
@@ -215,11 +255,9 @@ go build -buildvcs=false -o bin/fileforge .
 
 - OCR is not implemented yet
 - Office conversion is not implemented yet
-- PDF to image currently keeps Poppler’s generated `page-*` naming
-- PDF to image overwrite protection is directory/prefix-based
-- Release packaging is still manual
-- No metadata cleanup yet
-- No batch processing yet
+- PDF to image currently uses Poppler’s generated `page-*` filenames
+- PDF to image overwrite protection is directory/prefix based
+- Release packaging is still basic
 
 ## Roadmap
 
@@ -231,4 +269,4 @@ go build -buildvcs=false -o bin/fileforge .
 
 ## License
 
-License file is not added yet. The implementation plan currently recommends MIT.
+MIT. See [LICENSE](LICENSE).
