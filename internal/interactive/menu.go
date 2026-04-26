@@ -50,6 +50,8 @@ type Options struct {
 
 type App struct {
 	convertWizard  *ConvertWizard
+	pdfToImage     *PDFToImageWizard
+	imageToPDF     *ImageToPDFWizard
 	compressWizard *CompressWizard
 	pdfCompress    *PDFCompressWizard
 	pdfMerge       *PDFMergeWizard
@@ -63,6 +65,8 @@ type App struct {
 func NewApp(opts Options) *App {
 	return &App{
 		convertWizard:  NewConvertWizard(convert.NewImageConverter(opts.Runner)),
+		pdfToImage:     NewPDFToImageWizard(convert.NewPDFToImageConverter(opts.Runner)),
+		imageToPDF:     NewImageToPDFWizard(convert.NewImageToPDFConverter(opts.Runner)),
 		compressWizard: NewCompressWizard(compress.NewImageCompressor(opts.Runner)),
 		pdfCompress:    NewPDFCompressWizard(compress.NewPDFCompressor(opts.Runner)),
 		pdfMerge:       NewPDFMergeWizard(pdf.NewMerger(opts.Runner)),
@@ -88,6 +92,14 @@ func (a *App) Run(ctx context.Context) error {
 			}
 		case "compress_image":
 			if err := a.compressWizard.Run(ctx); err != nil && !IsCancelled(err) {
+				return err
+			}
+		case "pdf_to_image":
+			if err := a.pdfToImage.Run(ctx); err != nil && !IsCancelled(err) {
+				return err
+			}
+		case "image_to_pdf":
+			if err := a.imageToPDF.Run(ctx); err != nil && !IsCancelled(err) {
 				return err
 			}
 		case "doctor":
@@ -120,7 +132,7 @@ func (a *App) Run(ctx context.Context) error {
 			if err := a.pdfInfo.Run(ctx); err != nil && !IsCancelled(err) {
 				return err
 			}
-		case "pdf_to_image", "image_to_pdf", "ocr", "office":
+		case "ocr", "office":
 			if err := showNotImplemented("This feature is not implemented yet."); err != nil {
 				return err
 			}
@@ -183,7 +195,10 @@ func (a *App) runPDFChoice(ctx context.Context, choice string) error {
 	case "pdf_info":
 		return a.pdfInfo.Run(ctx)
 	case "pdf_to_image", "image_to_pdf":
-		return showNotImplemented("This feature is not implemented yet.")
+		if choice == "pdf_to_image" {
+			return a.pdfToImage.Run(ctx)
+		}
+		return a.imageToPDF.Run(ctx)
 	case "back":
 		return nil
 	default:

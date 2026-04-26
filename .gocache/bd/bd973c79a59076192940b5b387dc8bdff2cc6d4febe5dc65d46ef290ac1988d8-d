@@ -1,0 +1,8 @@
+./compress_wizard.go
+./conversion_wizard_extra.go
+./convert_wizard.go
+./menu.go
+./overwrite.go
+./path.go
+./pdf_helpers.go
+./pdf_wizard.go

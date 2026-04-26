@@ -3,7 +3,6 @@ package interactive
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"fileforge/internal/convert"
 	"fileforge/internal/validation"
@@ -15,8 +14,24 @@ type imageConvertService interface {
 	Convert(ctx context.Context, req convert.ImageConvertRequest) error
 }
 
+type pdfToImageService interface {
+	Convert(ctx context.Context, req convert.PDFToImageRequest) error
+}
+
+type imageToPDFService interface {
+	Convert(ctx context.Context, req convert.ImageToPDFRequest) error
+}
+
 type ConvertWizard struct {
 	service imageConvertService
+}
+
+type PDFToImageWizard struct {
+	service pdfToImageService
+}
+
+type ImageToPDFWizard struct {
+	service imageToPDFService
 }
 
 type ConvertInput struct {
@@ -26,8 +41,31 @@ type ConvertInput struct {
 	Force      bool
 }
 
+type PDFToImageInput struct {
+	InputPath string
+	OutputDir string
+	ToFormat  string
+	DPI       int
+	FirstPage int
+	LastPage  int
+}
+
+type ImageToPDFInput struct {
+	InputPath  string
+	OutputPath string
+	Force      bool
+}
+
 func NewConvertWizard(service imageConvertService) *ConvertWizard {
 	return &ConvertWizard{service: service}
+}
+
+func NewPDFToImageWizard(service pdfToImageService) *PDFToImageWizard {
+	return &PDFToImageWizard{service: service}
+}
+
+func NewImageToPDFWizard(service imageToPDFService) *ImageToPDFWizard {
+	return &ImageToPDFWizard{service: service}
 }
 
 func (w *ConvertWizard) Run(ctx context.Context) error {
@@ -112,27 +150,4 @@ func (w *ConvertWizard) Execute(ctx context.Context, in ConvertInput) error {
 		return err
 	}
 	return nil
-}
-
-func confirmOverwrite(path string) (bool, error) {
-	if _, err := os.Stat(path); err != nil {
-		if os.IsNotExist(err) {
-			return false, nil
-		}
-		return false, err
-	}
-
-	var overwrite bool
-	if err := huh.NewConfirm().
-		Title("Output already exists. Overwrite?").
-		Affirmative("Overwrite").
-		Negative("Cancel").
-		Value(&overwrite).
-		Run(); err != nil {
-		return false, cancelIfInterrupted(err)
-	}
-	if !overwrite {
-		return false, ErrCancelled
-	}
-	return true, nil
 }

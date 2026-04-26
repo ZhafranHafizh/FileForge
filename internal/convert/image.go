@@ -4,14 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strings"
 
 	"fileforge/internal/engine"
 	"fileforge/internal/runner"
 	"fileforge/internal/validation"
 )
-
-var supportedImageFormats = []string{"jpg", "jpeg", "png", "webp"}
 
 type ValidationError struct {
 	Err error
@@ -99,7 +96,7 @@ func BuildConvertPlan(req ImageConvertRequest) (ConvertPlan, error) {
 
 	toFormat := validation.NormalizeExtension(req.ToFormat)
 	if !validation.IsSupportedExtension(toFormat, supportedImageFormats) {
-		return ConvertPlan{}, ValidationError{Err: fmt.Errorf("unsupported target format %q; supported formats: %s", req.ToFormat, strings.Join(supportedImageFormats, ", "))}
+		return ConvertPlan{}, ValidationError{Err: fmt.Errorf("unsupported target format %q; supported formats: jpg, jpeg, png, webp", req.ToFormat)}
 	}
 
 	if err := validateOutputFormat(req.OutputPath, toFormat); err != nil {
@@ -133,7 +130,7 @@ func validateOutputFormat(outputPath string, toFormat string) error {
 		return ValidationError{Err: fmt.Errorf("output file must include an extension")}
 	}
 	if !validation.IsSupportedExtension(outputExt, supportedImageFormats) {
-		return ValidationError{Err: fmt.Errorf("unsupported output extension %q; supported formats: %s", outputExt, strings.Join(supportedImageFormats, ", "))}
+		return ValidationError{Err: fmt.Errorf("unsupported output extension %q; supported formats: jpg, jpeg, png, webp", outputExt)}
 	}
 	if !extensionsMatch(toFormat, outputExt) {
 		return ValidationError{Err: fmt.Errorf("output extension %q does not match target format %q", outputExt, toFormat)}
