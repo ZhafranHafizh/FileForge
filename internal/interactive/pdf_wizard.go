@@ -116,15 +116,9 @@ func (w *PDFCompressWizard) Run(ctx context.Context) error {
 				).
 				Value(&state.Preset),
 			huh.NewInput().
-				Title("Output folder").
+				Title("Output folder (optional, default: ./FileForge-Output)").
 				Value(&state.OutputDir).
-				Validate(func(v string) error {
-					path := NormalizePath(v)
-					if path == "" {
-						return fmt.Errorf("output folder is required")
-					}
-					return nil
-				}),
+				Validate(func(v string) error { return nil }),
 		),
 	)
 	if err := form.Run(); err != nil {
@@ -132,7 +126,7 @@ func (w *PDFCompressWizard) Run(ctx context.Context) error {
 	}
 
 	state.InputPath = NormalizePath(state.InputPath)
-	state.OutputDir = NormalizePath(state.OutputDir)
+	state.OutputDir = ResolveInteractiveOutputDir(state.OutputDir)
 
 	outputPath, err := outputpkg.ResolveOutputPath(state.InputPath, "", state.OutputDir, "-compressed", "pdf", true)
 	if err != nil {
@@ -206,15 +200,9 @@ func (w *PDFMergeWizard) Run(ctx context.Context) error {
 					return nil
 				}),
 			huh.NewInput().
-				Title("Output folder").
+				Title("Output folder (optional, default: ./FileForge-Output)").
 				Value(&state.OutputDir).
-				Validate(func(v string) error {
-					path := NormalizePath(v)
-					if path == "" {
-						return fmt.Errorf("output folder is required")
-					}
-					return nil
-				}),
+				Validate(func(v string) error { return nil }),
 		),
 	)
 	if err := form.Run(); err != nil {
@@ -226,7 +214,7 @@ func (w *PDFMergeWizard) Run(ctx context.Context) error {
 		return ValidationError{Err: err}
 	}
 	state.InputPaths = paths
-	state.OutputDir = NormalizePath(state.OutputDir)
+	state.OutputDir = ResolveInteractiveOutputDir(state.OutputDir)
 
 	outputPath, err := outputpkg.ResolveOutputPath("merged.pdf", "", state.OutputDir, "", "pdf", true)
 	if err != nil {
@@ -299,15 +287,9 @@ func (w *PDFSplitWizard) Run(ctx context.Context) error {
 					return err
 				}),
 			huh.NewInput().
-				Title("Output folder").
+				Title("Output folder (optional, default: ./FileForge-Output)").
 				Value(&state.OutputDir).
-				Validate(func(v string) error {
-					path := NormalizePath(v)
-					if path == "" {
-						return fmt.Errorf("output folder is required")
-					}
-					return nil
-				}),
+				Validate(func(v string) error { return nil }),
 		),
 	)
 	if err := form.Run(); err != nil {
@@ -315,7 +297,7 @@ func (w *PDFSplitWizard) Run(ctx context.Context) error {
 	}
 
 	state.InputPath = NormalizePath(state.InputPath)
-	state.OutputDir = NormalizePath(state.OutputDir)
+	state.OutputDir = ResolveInteractiveOutputDir(state.OutputDir)
 	state.PageRange = strings.TrimSpace(state.PageRange)
 
 	outputPath, err := outputpkg.ResolveOutputPath(state.InputPath, "", state.OutputDir, "-pages-"+outputpkg.SanitizeFilenamePart(state.PageRange), "pdf", true)

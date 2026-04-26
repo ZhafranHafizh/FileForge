@@ -2,6 +2,7 @@ package interactive
 
 import (
 	"context"
+	"path/filepath"
 	"testing"
 
 	"fileforge/internal/convert"
@@ -11,6 +12,17 @@ type fakeConverter struct {
 	lastReq convert.ImageConvertRequest
 	called  bool
 	err     error
+}
+
+func TestGeneratedImageConvertOutputUsesDefaultFolder(t *testing.T) {
+	got, err := generatedImageConvertOutput("photo.png", ResolveInteractiveOutputDir(""), "webp")
+	if err != nil {
+		t.Fatalf("generatedImageConvertOutput() error = %v", err)
+	}
+	want := filepath.Clean(filepath.Join(DefaultInteractiveOutputDir, "photo.webp"))
+	if got != want {
+		t.Fatalf("generatedImageConvertOutput() = %q, want %q", got, want)
+	}
 }
 
 func (f *fakeConverter) Convert(_ context.Context, req convert.ImageConvertRequest) error {

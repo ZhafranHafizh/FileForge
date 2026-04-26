@@ -54,14 +54,9 @@ func (w *CompressWizard) Run(ctx context.Context) error {
 					return validation.EnsureSupportedExtension(path, []string{"jpg", "jpeg", "png", "webp"})
 				}),
 			huh.NewInput().
-				Title("Output folder").
+				Title("Output folder (optional, default: ./FileForge-Output)").
 				Value(&state.OutputDir).
-				Validate(func(v string) error {
-					if NormalizePath(v) == "" {
-						return fmt.Errorf("output folder is required")
-					}
-					return nil
-				}),
+				Validate(func(v string) error { return nil }),
 			huh.NewInput().
 				Title("Quality").
 				Description("Enter a value from 1 to 100.").
@@ -81,7 +76,7 @@ func (w *CompressWizard) Run(ctx context.Context) error {
 	}
 
 	state.InputPath = NormalizePath(state.InputPath)
-	state.OutputDir = NormalizePath(state.OutputDir)
+	state.OutputDir = ResolveInteractiveOutputDir(state.OutputDir)
 
 	outputPath, err := outputpkg.ResolveOutputPath(state.InputPath, "", state.OutputDir, "-compressed", validation.Extension(state.InputPath), true)
 	if err != nil {

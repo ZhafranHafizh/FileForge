@@ -2,9 +2,11 @@ package interactive
 
 import (
 	"context"
+	"path/filepath"
 	"testing"
 
 	"fileforge/internal/compress"
+	outputpkg "fileforge/internal/output"
 )
 
 type fakeCompressor struct {
@@ -56,5 +58,16 @@ func TestParseQuality(t *testing.T) {
 	}
 	if value != 80 {
 		t.Fatalf("parseQuality() = %d, want 80", value)
+	}
+}
+
+func TestInteractiveImageCompressionOutputUsesDefaultFolder(t *testing.T) {
+	got, err := outputpkg.ResolveOutputPath("image.jpg", "", ResolveInteractiveOutputDir(""), "-compressed", "jpg", true)
+	if err != nil {
+		t.Fatalf("ResolveOutputPath() error = %v", err)
+	}
+	want := filepath.Clean(filepath.Join(DefaultInteractiveOutputDir, "image-compressed.jpg"))
+	if got != want {
+		t.Fatalf("ResolveOutputPath() = %q, want %q", got, want)
 	}
 }

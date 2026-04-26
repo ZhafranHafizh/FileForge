@@ -27,14 +27,9 @@ func (w *PDFToImageWizard) Run(ctx context.Context) error {
 				Value(&state.InputPath).
 				Validate(func(v string) error { return validatePDFPath(NormalizePath(v)) }),
 			huh.NewInput().
-				Title("Output folder").
+				Title("Output folder (optional, default: ./FileForge-Output)").
 				Value(&state.OutputDir).
-				Validate(func(v string) error {
-					if NormalizePath(v) == "" {
-						return fmt.Errorf("output folder is required")
-					}
-					return nil
-				}),
+				Validate(func(v string) error { return nil }),
 			huh.NewSelect[string]().
 				Title("Output image format").
 				Options(
@@ -82,7 +77,7 @@ func (w *PDFToImageWizard) Run(ctx context.Context) error {
 	}
 
 	state.InputPath = NormalizePath(state.InputPath)
-	state.OutputDir = NormalizePath(state.OutputDir)
+	state.OutputDir = ResolveInteractiveOutputDir(state.OutputDir)
 	generatedDir, err := outputpkg.ResolveOutputDir("", state.OutputDir, outputpkg.GeneratedPDFToImageDirName(state.InputPath))
 	if err != nil {
 		return ValidationError{Err: err}
@@ -150,15 +145,9 @@ func (w *ImageToPDFWizard) Run(ctx context.Context) error {
 					return validation.EnsureSupportedExtension(path, []string{"jpg", "jpeg", "png", "webp"})
 				}),
 			huh.NewInput().
-				Title("Output folder").
+				Title("Output folder (optional, default: ./FileForge-Output)").
 				Value(&state.OutputDir).
-				Validate(func(v string) error {
-					path := NormalizePath(v)
-					if path == "" {
-						return fmt.Errorf("output folder is required")
-					}
-					return nil
-				}),
+				Validate(func(v string) error { return nil }),
 		),
 	)
 	if err := form.Run(); err != nil {
@@ -166,7 +155,7 @@ func (w *ImageToPDFWizard) Run(ctx context.Context) error {
 	}
 
 	state.InputPath = NormalizePath(state.InputPath)
-	state.OutputDir = NormalizePath(state.OutputDir)
+	state.OutputDir = ResolveInteractiveOutputDir(state.OutputDir)
 	outputPath, err := outputpkg.ResolveOutputPath(state.InputPath, "", state.OutputDir, "", "pdf", true)
 	if err != nil {
 		return ValidationError{Err: err}

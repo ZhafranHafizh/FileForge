@@ -2,9 +2,11 @@ package interactive
 
 import (
 	"context"
+	"path/filepath"
 	"testing"
 
 	"fileforge/internal/compress"
+	outputpkg "fileforge/internal/output"
 	"fileforge/internal/pdf"
 )
 
@@ -130,5 +132,16 @@ func TestPDFInfoWizardExecuteUsesService(t *testing.T) {
 	}
 	if !svc.called {
 		t.Fatal("expected inspector to be called")
+	}
+}
+
+func TestInteractivePDFSplitOutputUsesDefaultFolder(t *testing.T) {
+	got, err := outputpkg.ResolveOutputPath("book.pdf", "", ResolveInteractiveOutputDir(""), "-pages-"+outputpkg.SanitizeFilenamePart("1-3,7,10-12"), "pdf", true)
+	if err != nil {
+		t.Fatalf("ResolveOutputPath() error = %v", err)
+	}
+	want := filepath.Clean(filepath.Join(DefaultInteractiveOutputDir, "book-pages-1-3_7_10-12.pdf"))
+	if got != want {
+		t.Fatalf("ResolveOutputPath() = %q, want %q", got, want)
 	}
 }

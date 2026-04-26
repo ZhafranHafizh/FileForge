@@ -24,3 +24,12 @@ func TestNormalizePath(t *testing.T) {
 		})
 	}
 }
+
+func TestResolveInteractiveOutputDir(t *testing.T) {
+	if got := ResolveInteractiveOutputDir("   "); got != filepath.Clean(DefaultInteractiveOutputDir) {
+		t.Fatalf("ResolveInteractiveOutputDir(empty) = %q", got)
+	}
+	if got := ResolveInteractiveOutputDir(` "C:\Temp\My Output" `); got != filepath.Clean(`C:\Temp\My Output`) {
+		t.Fatalf("ResolveInteractiveOutputDir(custom) = %q", got)
+	}
+}
