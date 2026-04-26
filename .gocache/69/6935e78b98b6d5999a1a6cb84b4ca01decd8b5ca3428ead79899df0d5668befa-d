@@ -1,0 +1,6 @@
+./compress.go
+./convert.go
+./doctor.go
+./pdf.go
+./root.go
+./version.go

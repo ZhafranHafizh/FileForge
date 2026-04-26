@@ -1,0 +1,20 @@
+# test log
+getenv GOTMPDIR
+open C:\Users\zhafr\AppData\Local\Temp\TestBuildCompressPlanValid3648548617\001\input.jpg
+stat C:\Users\zhafr\AppData\Local\Temp\TestBuildCompressPlanValid3648548617\001\input.jpg
+stat C:\Users\zhafr\AppData\Local\Temp\TestBuildCompressPlanValid3648548617\001\input.jpg
+stat C:\Users\zhafr\AppData\Local\Temp\TestBuildCompressPlanValid3648548617\001
+stat C:\Users\zhafr\AppData\Local\Temp\TestBuildCompressPlanValid3648548617\001\compressed.jpg
+open C:\Users\zhafr\AppData\Local\Temp
+getenv GOTMPDIR
+open C:\Users\zhafr\AppData\Local\Temp\TestBuildCompressPlanRejectsInvalidQuality2521817052\001\input.jpg
+stat C:\Users\zhafr\AppData\Local\Temp\TestBuildCompressPlanRejectsInvalidQuality2521817052\001\input.jpg
+stat C:\Users\zhafr\AppData\Local\Temp\TestBuildCompressPlanRejectsInvalidQuality2521817052\001\input.jpg
+stat C:\Users\zhafr\AppData\Local\Temp\TestBuildCompressPlanRejectsInvalidQuality2521817052\001
+stat C:\Users\zhafr\AppData\Local\Temp\TestBuildCompressPlanRejectsInvalidQuality2521817052\001\compressed.jpg
+open C:\Users\zhafr\AppData\Local\Temp
+getenv GOTMPDIR
+open C:\Users\zhafr\AppData\Local\Temp\TestBuildCompressPlanRejectsUnsupportedExtension3124528313\001\input.gif
+stat C:\Users\zhafr\AppData\Local\Temp\TestBuildCompressPlanRejectsUnsupportedExtension3124528313\001\input.gif
+stat C:\Users\zhafr\AppData\Local\Temp\TestBuildCompressPlanRejectsUnsupportedExtension3124528313\001\input.gif
+open C:\Users\zhafr\AppData\Local\Temp

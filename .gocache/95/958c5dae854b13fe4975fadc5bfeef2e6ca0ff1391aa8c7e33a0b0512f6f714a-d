@@ -1,0 +1,432 @@
+# test log
+getenv PATHEXT
+getenv NoDefaultCurrentDirectoryInExePath
+stat go.com
+stat go.exe
+stat go.bat
+stat go.cmd
+stat go.vbs
+stat go.vbe
+stat go.js
+stat go.jse
+stat go.wsf
+stat go.wsh
+stat go.msc
+stat go.cpl
+getenv path
+stat C:\Program Files\Go\bin\go.com
+stat C:\Program Files\Go\bin\go.exe
+getenv PATHEXT
+open NUL
+open C:\Program Files\Go\bin\go.exe
+getenv PATHEXT
+getenv NoDefaultCurrentDirectoryInExePath
+stat fileforge-does-not-exist.com
+stat fileforge-does-not-exist.exe
+stat fileforge-does-not-exist.bat
+stat fileforge-does-not-exist.cmd
+stat fileforge-does-not-exist.vbs
+stat fileforge-does-not-exist.vbe
+stat fileforge-does-not-exist.js
+stat fileforge-does-not-exist.jse
+stat fileforge-does-not-exist.wsf
+stat fileforge-does-not-exist.wsh
+stat fileforge-does-not-exist.msc
+stat fileforge-does-not-exist.cpl
+getenv path
+stat C:\Program Files\Go\bin\fileforge-does-not-exist.com
+stat C:\Program Files\Go\bin\fileforge-does-not-exist.exe
+stat C:\Program Files\Go\bin\fileforge-does-not-exist.bat
+stat C:\Program Files\Go\bin\fileforge-does-not-exist.cmd
+stat C:\Program Files\Go\bin\fileforge-does-not-exist.vbs
+stat C:\Program Files\Go\bin\fileforge-does-not-exist.vbe
+stat C:\Program Files\Go\bin\fileforge-does-not-exist.js
+stat C:\Program Files\Go\bin\fileforge-does-not-exist.jse
+stat C:\Program Files\Go\bin\fileforge-does-not-exist.wsf
+stat C:\Program Files\Go\bin\fileforge-does-not-exist.wsh
+stat C:\Program Files\Go\bin\fileforge-does-not-exist.msc
+stat C:\Program Files\Go\bin\fileforge-does-not-exist.cpl
+stat C:\Users\zhafr\.codex\tmp\arg0\codex-arg0hs8hzs\fileforge-does-not-exist.com
+stat C:\Users\zhafr\.codex\tmp\arg0\codex-arg0hs8hzs\fileforge-does-not-exist.exe
+stat C:\Users\zhafr\.codex\tmp\arg0\codex-arg0hs8hzs\fileforge-does-not-exist.bat
+stat C:\Users\zhafr\.codex\tmp\arg0\codex-arg0hs8hzs\fileforge-does-not-exist.cmd
+stat C:\Users\zhafr\.codex\tmp\arg0\codex-arg0hs8hzs\fileforge-does-not-exist.vbs
+stat C:\Users\zhafr\.codex\tmp\arg0\codex-arg0hs8hzs\fileforge-does-not-exist.vbe
+stat C:\Users\zhafr\.codex\tmp\arg0\codex-arg0hs8hzs\fileforge-does-not-exist.js
+stat C:\Users\zhafr\.codex\tmp\arg0\codex-arg0hs8hzs\fileforge-does-not-exist.jse
+stat C:\Users\zhafr\.codex\tmp\arg0\codex-arg0hs8hzs\fileforge-does-not-exist.wsf
+stat C:\Users\zhafr\.codex\tmp\arg0\codex-arg0hs8hzs\fileforge-does-not-exist.wsh
+stat C:\Users\zhafr\.codex\tmp\arg0\codex-arg0hs8hzs\fileforge-does-not-exist.msc
+stat C:\Users\zhafr\.codex\tmp\arg0\codex-arg0hs8hzs\fileforge-does-not-exist.cpl
+stat C:\Users\zhafr\AppData\Roaming\npm\node_modules\@openai\codex\node_modules\@openai\codex-win32-x64\vendor\x86_64-pc-windows-msvc\path\fileforge-does-not-exist.com
+stat C:\Users\zhafr\AppData\Roaming\npm\node_modules\@openai\codex\node_modules\@openai\codex-win32-x64\vendor\x86_64-pc-windows-msvc\path\fileforge-does-not-exist.exe
+stat C:\Users\zhafr\AppData\Roaming\npm\node_modules\@openai\codex\node_modules\@openai\codex-win32-x64\vendor\x86_64-pc-windows-msvc\path\fileforge-does-not-exist.bat
+stat C:\Users\zhafr\AppData\Roaming\npm\node_modules\@openai\codex\node_modules\@openai\codex-win32-x64\vendor\x86_64-pc-windows-msvc\path\fileforge-does-not-exist.cmd
+stat C:\Users\zhafr\AppData\Roaming\npm\node_modules\@openai\codex\node_modules\@openai\codex-win32-x64\vendor\x86_64-pc-windows-msvc\path\fileforge-does-not-exist.vbs
+stat C:\Users\zhafr\AppData\Roaming\npm\node_modules\@openai\codex\node_modules\@openai\codex-win32-x64\vendor\x86_64-pc-windows-msvc\path\fileforge-does-not-exist.vbe
+stat C:\Users\zhafr\AppData\Roaming\npm\node_modules\@openai\codex\node_modules\@openai\codex-win32-x64\vendor\x86_64-pc-windows-msvc\path\fileforge-does-not-exist.js
+stat C:\Users\zhafr\AppData\Roaming\npm\node_modules\@openai\codex\node_modules\@openai\codex-win32-x64\vendor\x86_64-pc-windows-msvc\path\fileforge-does-not-exist.jse
+stat C:\Users\zhafr\AppData\Roaming\npm\node_modules\@openai\codex\node_modules\@openai\codex-win32-x64\vendor\x86_64-pc-windows-msvc\path\fileforge-does-not-exist.wsf
+stat C:\Users\zhafr\AppData\Roaming\npm\node_modules\@openai\codex\node_modules\@openai\codex-win32-x64\vendor\x86_64-pc-windows-msvc\path\fileforge-does-not-exist.wsh
+stat C:\Users\zhafr\AppData\Roaming\npm\node_modules\@openai\codex\node_modules\@openai\codex-win32-x64\vendor\x86_64-pc-windows-msvc\path\fileforge-does-not-exist.msc
+stat C:\Users\zhafr\AppData\Roaming\npm\node_modules\@openai\codex\node_modules\@openai\codex-win32-x64\vendor\x86_64-pc-windows-msvc\path\fileforge-does-not-exist.cpl
+stat C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\fileforge-does-not-exist.com
+stat C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\fileforge-does-not-exist.exe
+stat C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\fileforge-does-not-exist.bat
+stat C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\fileforge-does-not-exist.cmd
+stat C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\fileforge-does-not-exist.vbs
+stat C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\fileforge-does-not-exist.vbe
+stat C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\fileforge-does-not-exist.js
+stat C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\fileforge-does-not-exist.jse
+stat C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\fileforge-does-not-exist.wsf
+stat C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\fileforge-does-not-exist.wsh
+stat C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\fileforge-does-not-exist.msc
+stat C:\Program Files\ImageMagick-7.1.2-Q16-HDRI\fileforge-does-not-exist.cpl
+stat C:\Program Files\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.com
+stat C:\Program Files\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.exe
+stat C:\Program Files\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.bat
+stat C:\Program Files\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.cmd
+stat C:\Program Files\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.vbs
+stat C:\Program Files\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.vbe
+stat C:\Program Files\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.js
+stat C:\Program Files\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.jse
+stat C:\Program Files\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.wsf
+stat C:\Program Files\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.wsh
+stat C:\Program Files\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.msc
+stat C:\Program Files\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.cpl
+stat C:\Program Files (x86)\Common Files\Oracle\Java\java8path\fileforge-does-not-exist.com
+stat C:\Program Files (x86)\Common Files\Oracle\Java\java8path\fileforge-does-not-exist.exe
+stat C:\Program Files (x86)\Common Files\Oracle\Java\java8path\fileforge-does-not-exist.bat
+stat C:\Program Files (x86)\Common Files\Oracle\Java\java8path\fileforge-does-not-exist.cmd
+stat C:\Program Files (x86)\Common Files\Oracle\Java\java8path\fileforge-does-not-exist.vbs
+stat C:\Program Files (x86)\Common Files\Oracle\Java\java8path\fileforge-does-not-exist.vbe
+stat C:\Program Files (x86)\Common Files\Oracle\Java\java8path\fileforge-does-not-exist.js
+stat C:\Program Files (x86)\Common Files\Oracle\Java\java8path\fileforge-does-not-exist.jse
+stat C:\Program Files (x86)\Common Files\Oracle\Java\java8path\fileforge-does-not-exist.wsf
+stat C:\Program Files (x86)\Common Files\Oracle\Java\java8path\fileforge-does-not-exist.wsh
+stat C:\Program Files (x86)\Common Files\Oracle\Java\java8path\fileforge-does-not-exist.msc
+stat C:\Program Files (x86)\Common Files\Oracle\Java\java8path\fileforge-does-not-exist.cpl
+stat C:\Program Files (x86)\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.com
+stat C:\Program Files (x86)\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.exe
+stat C:\Program Files (x86)\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.bat
+stat C:\Program Files (x86)\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.cmd
+stat C:\Program Files (x86)\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.vbs
+stat C:\Program Files (x86)\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.vbe
+stat C:\Program Files (x86)\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.js
+stat C:\Program Files (x86)\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.jse
+stat C:\Program Files (x86)\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.wsf
+stat C:\Program Files (x86)\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.wsh
+stat C:\Program Files (x86)\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.msc
+stat C:\Program Files (x86)\Common Files\Oracle\Java\javapath\fileforge-does-not-exist.cpl
+stat C:\WINDOWS\system32\fileforge-does-not-exist.com
+stat C:\WINDOWS\system32\fileforge-does-not-exist.exe
+stat C:\WINDOWS\system32\fileforge-does-not-exist.bat
+stat C:\WINDOWS\system32\fileforge-does-not-exist.cmd
+stat C:\WINDOWS\system32\fileforge-does-not-exist.vbs
+stat C:\WINDOWS\system32\fileforge-does-not-exist.vbe
+stat C:\WINDOWS\system32\fileforge-does-not-exist.js
+stat C:\WINDOWS\system32\fileforge-does-not-exist.jse
+stat C:\WINDOWS\system32\fileforge-does-not-exist.wsf
+stat C:\WINDOWS\system32\fileforge-does-not-exist.wsh
+stat C:\WINDOWS\system32\fileforge-does-not-exist.msc
+stat C:\WINDOWS\system32\fileforge-does-not-exist.cpl
+stat C:\WINDOWS\fileforge-does-not-exist.com
+stat C:\WINDOWS\fileforge-does-not-exist.exe
+stat C:\WINDOWS\fileforge-does-not-exist.bat
+stat C:\WINDOWS\fileforge-does-not-exist.cmd
+stat C:\WINDOWS\fileforge-does-not-exist.vbs
+stat C:\WINDOWS\fileforge-does-not-exist.vbe
+stat C:\WINDOWS\fileforge-does-not-exist.js
+stat C:\WINDOWS\fileforge-does-not-exist.jse
+stat C:\WINDOWS\fileforge-does-not-exist.wsf
+stat C:\WINDOWS\fileforge-does-not-exist.wsh
+stat C:\WINDOWS\fileforge-does-not-exist.msc
+stat C:\WINDOWS\fileforge-does-not-exist.cpl
+stat C:\WINDOWS\System32\Wbem\fileforge-does-not-exist.com
+stat C:\WINDOWS\System32\Wbem\fileforge-does-not-exist.exe
+stat C:\WINDOWS\System32\Wbem\fileforge-does-not-exist.bat
+stat C:\WINDOWS\System32\Wbem\fileforge-does-not-exist.cmd
+stat C:\WINDOWS\System32\Wbem\fileforge-does-not-exist.vbs
+stat C:\WINDOWS\System32\Wbem\fileforge-does-not-exist.vbe
+stat C:\WINDOWS\System32\Wbem\fileforge-does-not-exist.js
+stat C:\WINDOWS\System32\Wbem\fileforge-does-not-exist.jse
+stat C:\WINDOWS\System32\Wbem\fileforge-does-not-exist.wsf
+stat C:\WINDOWS\System32\Wbem\fileforge-does-not-exist.wsh
+stat C:\WINDOWS\System32\Wbem\fileforge-does-not-exist.msc
+stat C:\WINDOWS\System32\Wbem\fileforge-does-not-exist.cpl
+stat C:\WINDOWS\System32\WindowsPowerShell\v1.0\fileforge-does-not-exist.com
+stat C:\WINDOWS\System32\WindowsPowerShell\v1.0\fileforge-does-not-exist.exe
+stat C:\WINDOWS\System32\WindowsPowerShell\v1.0\fileforge-does-not-exist.bat
+stat C:\WINDOWS\System32\WindowsPowerShell\v1.0\fileforge-does-not-exist.cmd
+stat C:\WINDOWS\System32\WindowsPowerShell\v1.0\fileforge-does-not-exist.vbs
+stat C:\WINDOWS\System32\WindowsPowerShell\v1.0\fileforge-does-not-exist.vbe
+stat C:\WINDOWS\System32\WindowsPowerShell\v1.0\fileforge-does-not-exist.js
+stat C:\WINDOWS\System32\WindowsPowerShell\v1.0\fileforge-does-not-exist.jse
+stat C:\WINDOWS\System32\WindowsPowerShell\v1.0\fileforge-does-not-exist.wsf
+stat C:\WINDOWS\System32\WindowsPowerShell\v1.0\fileforge-does-not-exist.wsh
+stat C:\WINDOWS\System32\WindowsPowerShell\v1.0\fileforge-does-not-exist.msc
+stat C:\WINDOWS\System32\WindowsPowerShell\v1.0\fileforge-does-not-exist.cpl
+stat C:\WINDOWS\System32\OpenSSH\fileforge-does-not-exist.com
+stat C:\WINDOWS\System32\OpenSSH\fileforge-does-not-exist.exe
+stat C:\WINDOWS\System32\OpenSSH\fileforge-does-not-exist.bat
+stat C:\WINDOWS\System32\OpenSSH\fileforge-does-not-exist.cmd
+stat C:\WINDOWS\System32\OpenSSH\fileforge-does-not-exist.vbs
+stat C:\WINDOWS\System32\OpenSSH\fileforge-does-not-exist.vbe
+stat C:\WINDOWS\System32\OpenSSH\fileforge-does-not-exist.js
+stat C:\WINDOWS\System32\OpenSSH\fileforge-does-not-exist.jse
+stat C:\WINDOWS\System32\OpenSSH\fileforge-does-not-exist.wsf
+stat C:\WINDOWS\System32\OpenSSH\fileforge-does-not-exist.wsh
+stat C:\WINDOWS\System32\OpenSSH\fileforge-does-not-exist.msc
+stat C:\WINDOWS\System32\OpenSSH\fileforge-does-not-exist.cpl
+stat C:\Program Files\dotnet\fileforge-does-not-exist.com
+stat C:\Program Files\dotnet\fileforge-does-not-exist.exe
+stat C:\Program Files\dotnet\fileforge-does-not-exist.bat
+stat C:\Program Files\dotnet\fileforge-does-not-exist.cmd
+stat C:\Program Files\dotnet\fileforge-does-not-exist.vbs
+stat C:\Program Files\dotnet\fileforge-does-not-exist.vbe
+stat C:\Program Files\dotnet\fileforge-does-not-exist.js
+stat C:\Program Files\dotnet\fileforge-does-not-exist.jse
+stat C:\Program Files\dotnet\fileforge-does-not-exist.wsf
+stat C:\Program Files\dotnet\fileforge-does-not-exist.wsh
+stat C:\Program Files\dotnet\fileforge-does-not-exist.msc
+stat C:\Program Files\dotnet\fileforge-does-not-exist.cpl
+stat C:\Program Files\Git\cmd\fileforge-does-not-exist.com
+stat C:\Program Files\Git\cmd\fileforge-does-not-exist.exe
+stat C:\Program Files\Git\cmd\fileforge-does-not-exist.bat
+stat C:\Program Files\Git\cmd\fileforge-does-not-exist.cmd
+stat C:\Program Files\Git\cmd\fileforge-does-not-exist.vbs
+stat C:\Program Files\Git\cmd\fileforge-does-not-exist.vbe
+stat C:\Program Files\Git\cmd\fileforge-does-not-exist.js
+stat C:\Program Files\Git\cmd\fileforge-does-not-exist.jse
+stat C:\Program Files\Git\cmd\fileforge-does-not-exist.wsf
+stat C:\Program Files\Git\cmd\fileforge-does-not-exist.wsh
+stat C:\Program Files\Git\cmd\fileforge-does-not-exist.msc
+stat C:\Program Files\Git\cmd\fileforge-does-not-exist.cpl
+stat C:\ProgramData\ComposerSetup\bin\fileforge-does-not-exist.com
+stat C:\ProgramData\ComposerSetup\bin\fileforge-does-not-exist.exe
+stat C:\ProgramData\ComposerSetup\bin\fileforge-does-not-exist.bat
+stat C:\ProgramData\ComposerSetup\bin\fileforge-does-not-exist.cmd
+stat C:\ProgramData\ComposerSetup\bin\fileforge-does-not-exist.vbs
+stat C:\ProgramData\ComposerSetup\bin\fileforge-does-not-exist.vbe
+stat C:\ProgramData\ComposerSetup\bin\fileforge-does-not-exist.js
+stat C:\ProgramData\ComposerSetup\bin\fileforge-does-not-exist.jse
+stat C:\ProgramData\ComposerSetup\bin\fileforge-does-not-exist.wsf
+stat C:\ProgramData\ComposerSetup\bin\fileforge-does-not-exist.wsh
+stat C:\ProgramData\ComposerSetup\bin\fileforge-does-not-exist.msc
+stat C:\ProgramData\ComposerSetup\bin\fileforge-does-not-exist.cpl
+stat C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR\fileforge-does-not-exist.com
+stat C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR\fileforge-does-not-exist.exe
+stat C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR\fileforge-does-not-exist.bat
+stat C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR\fileforge-does-not-exist.cmd
+stat C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR\fileforge-does-not-exist.vbs
+stat C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR\fileforge-does-not-exist.vbe
+stat C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR\fileforge-does-not-exist.js
+stat C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR\fileforge-does-not-exist.jse
+stat C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR\fileforge-does-not-exist.wsf
+stat C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR\fileforge-does-not-exist.wsh
+stat C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR\fileforge-does-not-exist.msc
+stat C:\Program Files\NVIDIA Corporation\NVIDIA app\NvDLISR\fileforge-does-not-exist.cpl
+stat C:\Program Files\Cloudflare\Cloudflare WARP\fileforge-does-not-exist.com
+stat C:\Program Files\Cloudflare\Cloudflare WARP\fileforge-does-not-exist.exe
+stat C:\Program Files\Cloudflare\Cloudflare WARP\fileforge-does-not-exist.bat
+stat C:\Program Files\Cloudflare\Cloudflare WARP\fileforge-does-not-exist.cmd
+stat C:\Program Files\Cloudflare\Cloudflare WARP\fileforge-does-not-exist.vbs
+stat C:\Program Files\Cloudflare\Cloudflare WARP\fileforge-does-not-exist.vbe
+stat C:\Program Files\Cloudflare\Cloudflare WARP\fileforge-does-not-exist.js
+stat C:\Program Files\Cloudflare\Cloudflare WARP\fileforge-does-not-exist.jse
+stat C:\Program Files\Cloudflare\Cloudflare WARP\fileforge-does-not-exist.wsf
+stat C:\Program Files\Cloudflare\Cloudflare WARP\fileforge-does-not-exist.wsh
+stat C:\Program Files\Cloudflare\Cloudflare WARP\fileforge-does-not-exist.msc
+stat C:\Program Files\Cloudflare\Cloudflare WARP\fileforge-does-not-exist.cpl
+stat C:\Program Files\Docker\Docker\resources\bin\fileforge-does-not-exist.com
+stat C:\Program Files\Docker\Docker\resources\bin\fileforge-does-not-exist.exe
+stat C:\Program Files\Docker\Docker\resources\bin\fileforge-does-not-exist.bat
+stat C:\Program Files\Docker\Docker\resources\bin\fileforge-does-not-exist.cmd
+stat C:\Program Files\Docker\Docker\resources\bin\fileforge-does-not-exist.vbs
+stat C:\Program Files\Docker\Docker\resources\bin\fileforge-does-not-exist.vbe
+stat C:\Program Files\Docker\Docker\resources\bin\fileforge-does-not-exist.js
+stat C:\Program Files\Docker\Docker\resources\bin\fileforge-does-not-exist.jse
+stat C:\Program Files\Docker\Docker\resources\bin\fileforge-does-not-exist.wsf
+stat C:\Program Files\Docker\Docker\resources\bin\fileforge-does-not-exist.wsh
+stat C:\Program Files\Docker\Docker\resources\bin\fileforge-does-not-exist.msc
+stat C:\Program Files\Docker\Docker\resources\bin\fileforge-does-not-exist.cpl
+stat C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common\fileforge-does-not-exist.com
+stat C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common\fileforge-does-not-exist.exe
+stat C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common\fileforge-does-not-exist.bat
+stat C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common\fileforge-does-not-exist.cmd
+stat C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common\fileforge-does-not-exist.vbs
+stat C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common\fileforge-does-not-exist.vbe
+stat C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common\fileforge-does-not-exist.js
+stat C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common\fileforge-does-not-exist.jse
+stat C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common\fileforge-does-not-exist.wsf
+stat C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common\fileforge-does-not-exist.wsh
+stat C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common\fileforge-does-not-exist.msc
+stat C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common\fileforge-does-not-exist.cpl
+stat C:\Program Files\nodejs\fileforge-does-not-exist.com
+stat C:\Program Files\nodejs\fileforge-does-not-exist.exe
+stat C:\Program Files\nodejs\fileforge-does-not-exist.bat
+stat C:\Program Files\nodejs\fileforge-does-not-exist.cmd
+stat C:\Program Files\nodejs\fileforge-does-not-exist.vbs
+stat C:\Program Files\nodejs\fileforge-does-not-exist.vbe
+stat C:\Program Files\nodejs\fileforge-does-not-exist.js
+stat C:\Program Files\nodejs\fileforge-does-not-exist.jse
+stat C:\Program Files\nodejs\fileforge-does-not-exist.wsf
+stat C:\Program Files\nodejs\fileforge-does-not-exist.wsh
+stat C:\Program Files\nodejs\fileforge-does-not-exist.msc
+stat C:\Program Files\nodejs\fileforge-does-not-exist.cpl
+stat C:\Program Files\MySQL\MySQL Shell 8.0\bin\fileforge-does-not-exist.com
+stat C:\Program Files\MySQL\MySQL Shell 8.0\bin\fileforge-does-not-exist.exe
+stat C:\Program Files\MySQL\MySQL Shell 8.0\bin\fileforge-does-not-exist.bat
+stat C:\Program Files\MySQL\MySQL Shell 8.0\bin\fileforge-does-not-exist.cmd
+stat C:\Program Files\MySQL\MySQL Shell 8.0\bin\fileforge-does-not-exist.vbs
+stat C:\Program Files\MySQL\MySQL Shell 8.0\bin\fileforge-does-not-exist.vbe
+stat C:\Program Files\MySQL\MySQL Shell 8.0\bin\fileforge-does-not-exist.js
+stat C:\Program Files\MySQL\MySQL Shell 8.0\bin\fileforge-does-not-exist.jse
+stat C:\Program Files\MySQL\MySQL Shell 8.0\bin\fileforge-does-not-exist.wsf
+stat C:\Program Files\MySQL\MySQL Shell 8.0\bin\fileforge-does-not-exist.wsh
+stat C:\Program Files\MySQL\MySQL Shell 8.0\bin\fileforge-does-not-exist.msc
+stat C:\Program Files\MySQL\MySQL Shell 8.0\bin\fileforge-does-not-exist.cpl
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\Scripts\fileforge-does-not-exist.com
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\Scripts\fileforge-does-not-exist.exe
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\Scripts\fileforge-does-not-exist.bat
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\Scripts\fileforge-does-not-exist.cmd
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\Scripts\fileforge-does-not-exist.vbs
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\Scripts\fileforge-does-not-exist.vbe
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\Scripts\fileforge-does-not-exist.js
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\Scripts\fileforge-does-not-exist.jse
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\Scripts\fileforge-does-not-exist.wsf
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\Scripts\fileforge-does-not-exist.wsh
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\Scripts\fileforge-does-not-exist.msc
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\Scripts\fileforge-does-not-exist.cpl
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\fileforge-does-not-exist.com
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\fileforge-does-not-exist.exe
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\fileforge-does-not-exist.bat
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\fileforge-does-not-exist.cmd
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\fileforge-does-not-exist.vbs
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\fileforge-does-not-exist.vbe
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\fileforge-does-not-exist.js
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\fileforge-does-not-exist.jse
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\fileforge-does-not-exist.wsf
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\fileforge-does-not-exist.wsh
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\fileforge-does-not-exist.msc
+stat C:\Users\zhafr\AppData\Local\Programs\Python\Python310\fileforge-does-not-exist.cpl
+stat C:\Users\zhafr\AppData\Local\Microsoft\WindowsApps\fileforge-does-not-exist.com
+stat C:\Users\zhafr\AppData\Local\Microsoft\WindowsApps\fileforge-does-not-exist.exe
+stat C:\Users\zhafr\AppData\Local\Microsoft\WindowsApps\fileforge-does-not-exist.bat
+stat C:\Users\zhafr\AppData\Local\Microsoft\WindowsApps\fileforge-does-not-exist.cmd
+stat C:\Users\zhafr\AppData\Local\Microsoft\WindowsApps\fileforge-does-not-exist.vbs
+stat C:\Users\zhafr\AppData\Local\Microsoft\WindowsApps\fileforge-does-not-exist.vbe
+stat C:\Users\zhafr\AppData\Local\Microsoft\WindowsApps\fileforge-does-not-exist.js
+stat C:\Users\zhafr\AppData\Local\Microsoft\WindowsApps\fileforge-does-not-exist.jse
+stat C:\Users\zhafr\AppData\Local\Microsoft\WindowsApps\fileforge-does-not-exist.wsf
+stat C:\Users\zhafr\AppData\Local\Microsoft\WindowsApps\fileforge-does-not-exist.wsh
+stat C:\Users\zhafr\AppData\Local\Microsoft\WindowsApps\fileforge-does-not-exist.msc
+stat C:\Users\zhafr\AppData\Local\Microsoft\WindowsApps\fileforge-does-not-exist.cpl
+stat D:\Telkom Univ\VSC\Microsoft VS Code\bin\fileforge-does-not-exist.com
+stat D:\Telkom Univ\VSC\Microsoft VS Code\bin\fileforge-does-not-exist.exe
+stat D:\Telkom Univ\VSC\Microsoft VS Code\bin\fileforge-does-not-exist.bat
+stat D:\Telkom Univ\VSC\Microsoft VS Code\bin\fileforge-does-not-exist.cmd
+stat D:\Telkom Univ\VSC\Microsoft VS Code\bin\fileforge-does-not-exist.vbs
+stat D:\Telkom Univ\VSC\Microsoft VS Code\bin\fileforge-does-not-exist.vbe
+stat D:\Telkom Univ\VSC\Microsoft VS Code\bin\fileforge-does-not-exist.js
+stat D:\Telkom Univ\VSC\Microsoft VS Code\bin\fileforge-does-not-exist.jse
+stat D:\Telkom Univ\VSC\Microsoft VS Code\bin\fileforge-does-not-exist.wsf
+stat D:\Telkom Univ\VSC\Microsoft VS Code\bin\fileforge-does-not-exist.wsh
+stat D:\Telkom Univ\VSC\Microsoft VS Code\bin\fileforge-does-not-exist.msc
+stat D:\Telkom Univ\VSC\Microsoft VS Code\bin\fileforge-does-not-exist.cpl
+stat C:\Users\zhafr\AppData\Local\GitHubDesktop\bin\fileforge-does-not-exist.com
+stat C:\Users\zhafr\AppData\Local\GitHubDesktop\bin\fileforge-does-not-exist.exe
+stat C:\Users\zhafr\AppData\Local\GitHubDesktop\bin\fileforge-does-not-exist.bat
+stat C:\Users\zhafr\AppData\Local\GitHubDesktop\bin\fileforge-does-not-exist.cmd
+stat C:\Users\zhafr\AppData\Local\GitHubDesktop\bin\fileforge-does-not-exist.vbs
+stat C:\Users\zhafr\AppData\Local\GitHubDesktop\bin\fileforge-does-not-exist.vbe
+stat C:\Users\zhafr\AppData\Local\GitHubDesktop\bin\fileforge-does-not-exist.js
+stat C:\Users\zhafr\AppData\Local\GitHubDesktop\bin\fileforge-does-not-exist.jse
+stat C:\Users\zhafr\AppData\Local\GitHubDesktop\bin\fileforge-does-not-exist.wsf
+stat C:\Users\zhafr\AppData\Local\GitHubDesktop\bin\fileforge-does-not-exist.wsh
+stat C:\Users\zhafr\AppData\Local\GitHubDesktop\bin\fileforge-does-not-exist.msc
+stat C:\Users\zhafr\AppData\Local\GitHubDesktop\bin\fileforge-does-not-exist.cpl
+stat C:\php-8.3.0-nts-Win32-vs16-x64\fileforge-does-not-exist.com
+stat C:\php-8.3.0-nts-Win32-vs16-x64\fileforge-does-not-exist.exe
+stat C:\php-8.3.0-nts-Win32-vs16-x64\fileforge-does-not-exist.bat
+stat C:\php-8.3.0-nts-Win32-vs16-x64\fileforge-does-not-exist.cmd
+stat C:\php-8.3.0-nts-Win32-vs16-x64\fileforge-does-not-exist.vbs
+stat C:\php-8.3.0-nts-Win32-vs16-x64\fileforge-does-not-exist.vbe
+stat C:\php-8.3.0-nts-Win32-vs16-x64\fileforge-does-not-exist.js
+stat C:\php-8.3.0-nts-Win32-vs16-x64\fileforge-does-not-exist.jse
+stat C:\php-8.3.0-nts-Win32-vs16-x64\fileforge-does-not-exist.wsf
+stat C:\php-8.3.0-nts-Win32-vs16-x64\fileforge-does-not-exist.wsh
+stat C:\php-8.3.0-nts-Win32-vs16-x64\fileforge-does-not-exist.msc
+stat C:\php-8.3.0-nts-Win32-vs16-x64\fileforge-does-not-exist.cpl
+stat C:\Users\zhafr\AppData\Roaming\Composer\vendor\bin\fileforge-does-not-exist.com
+stat C:\Users\zhafr\AppData\Roaming\Composer\vendor\bin\fileforge-does-not-exist.exe
+stat C:\Users\zhafr\AppData\Roaming\Composer\vendor\bin\fileforge-does-not-exist.bat
+stat C:\Users\zhafr\AppData\Roaming\Composer\vendor\bin\fileforge-does-not-exist.cmd
+stat C:\Users\zhafr\AppData\Roaming\Composer\vendor\bin\fileforge-does-not-exist.vbs
+stat C:\Users\zhafr\AppData\Roaming\Composer\vendor\bin\fileforge-does-not-exist.vbe
+stat C:\Users\zhafr\AppData\Roaming\Composer\vendor\bin\fileforge-does-not-exist.js
+stat C:\Users\zhafr\AppData\Roaming\Composer\vendor\bin\fileforge-does-not-exist.jse
+stat C:\Users\zhafr\AppData\Roaming\Composer\vendor\bin\fileforge-does-not-exist.wsf
+stat C:\Users\zhafr\AppData\Roaming\Composer\vendor\bin\fileforge-does-not-exist.wsh
+stat C:\Users\zhafr\AppData\Roaming\Composer\vendor\bin\fileforge-does-not-exist.msc
+stat C:\Users\zhafr\AppData\Roaming\Composer\vendor\bin\fileforge-does-not-exist.cpl
+stat D:\zhafran hafizh\Private COde\Rahasia rek\chromedriver-win64\fileforge-does-not-exist.com
+stat D:\zhafran hafizh\Private COde\Rahasia rek\chromedriver-win64\fileforge-does-not-exist.exe
+stat D:\zhafran hafizh\Private COde\Rahasia rek\chromedriver-win64\fileforge-does-not-exist.bat
+stat D:\zhafran hafizh\Private COde\Rahasia rek\chromedriver-win64\fileforge-does-not-exist.cmd
+stat D:\zhafran hafizh\Private COde\Rahasia rek\chromedriver-win64\fileforge-does-not-exist.vbs
+stat D:\zhafran hafizh\Private COde\Rahasia rek\chromedriver-win64\fileforge-does-not-exist.vbe
+stat D:\zhafran hafizh\Private COde\Rahasia rek\chromedriver-win64\fileforge-does-not-exist.js
+stat D:\zhafran hafizh\Private COde\Rahasia rek\chromedriver-win64\fileforge-does-not-exist.jse
+stat D:\zhafran hafizh\Private COde\Rahasia rek\chromedriver-win64\fileforge-does-not-exist.wsf
+stat D:\zhafran hafizh\Private COde\Rahasia rek\chromedriver-win64\fileforge-does-not-exist.wsh
+stat D:\zhafran hafizh\Private COde\Rahasia rek\chromedriver-win64\fileforge-does-not-exist.msc
+stat D:\zhafran hafizh\Private COde\Rahasia rek\chromedriver-win64\fileforge-does-not-exist.cpl
+stat D:\Telkom Univ\Tingkat 3 (Sem 5-6)\Semester 6\Android\bin\fileforge-does-not-exist.com
+stat D:\Telkom Univ\Tingkat 3 (Sem 5-6)\Semester 6\Android\bin\fileforge-does-not-exist.exe
+stat D:\Telkom Univ\Tingkat 3 (Sem 5-6)\Semester 6\Android\bin\fileforge-does-not-exist.bat
+stat D:\Telkom Univ\Tingkat 3 (Sem 5-6)\Semester 6\Android\bin\fileforge-does-not-exist.cmd
+stat D:\Telkom Univ\Tingkat 3 (Sem 5-6)\Semester 6\Android\bin\fileforge-does-not-exist.vbs
+stat D:\Telkom Univ\Tingkat 3 (Sem 5-6)\Semester 6\Android\bin\fileforge-does-not-exist.vbe
+stat D:\Telkom Univ\Tingkat 3 (Sem 5-6)\Semester 6\Android\bin\fileforge-does-not-exist.js
+stat D:\Telkom Univ\Tingkat 3 (Sem 5-6)\Semester 6\Android\bin\fileforge-does-not-exist.jse
+stat D:\Telkom Univ\Tingkat 3 (Sem 5-6)\Semester 6\Android\bin\fileforge-does-not-exist.wsf
+stat D:\Telkom Univ\Tingkat 3 (Sem 5-6)\Semester 6\Android\bin\fileforge-does-not-exist.wsh
+stat D:\Telkom Univ\Tingkat 3 (Sem 5-6)\Semester 6\Android\bin\fileforge-does-not-exist.msc
+stat D:\Telkom Univ\Tingkat 3 (Sem 5-6)\Semester 6\Android\bin\fileforge-does-not-exist.cpl
+stat D:\Telkom Univ\Flutter jawir\flutter\bin\fileforge-does-not-exist.com
+stat D:\Telkom Univ\Flutter jawir\flutter\bin\fileforge-does-not-exist.exe
+stat D:\Telkom Univ\Flutter jawir\flutter\bin\fileforge-does-not-exist.bat
+stat D:\Telkom Univ\Flutter jawir\flutter\bin\fileforge-does-not-exist.cmd
+stat D:\Telkom Univ\Flutter jawir\flutter\bin\fileforge-does-not-exist.vbs
+stat D:\Telkom Univ\Flutter jawir\flutter\bin\fileforge-does-not-exist.vbe
+stat D:\Telkom Univ\Flutter jawir\flutter\bin\fileforge-does-not-exist.js
+stat D:\Telkom Univ\Flutter jawir\flutter\bin\fileforge-does-not-exist.jse
+stat D:\Telkom Univ\Flutter jawir\flutter\bin\fileforge-does-not-exist.wsf
+stat D:\Telkom Univ\Flutter jawir\flutter\bin\fileforge-does-not-exist.wsh
+stat D:\Telkom Univ\Flutter jawir\flutter\bin\fileforge-does-not-exist.msc
+stat D:\Telkom Univ\Flutter jawir\flutter\bin\fileforge-does-not-exist.cpl
+stat D:\Antigravity\bin\fileforge-does-not-exist.com
+stat D:\Antigravity\bin\fileforge-does-not-exist.exe
+stat D:\Antigravity\bin\fileforge-does-not-exist.bat
+stat D:\Antigravity\bin\fileforge-does-not-exist.cmd
+stat D:\Antigravity\bin\fileforge-does-not-exist.vbs
+stat D:\Antigravity\bin\fileforge-does-not-exist.vbe
+stat D:\Antigravity\bin\fileforge-does-not-exist.js
+stat D:\Antigravity\bin\fileforge-does-not-exist.jse
+stat D:\Antigravity\bin\fileforge-does-not-exist.wsf
+stat D:\Antigravity\bin\fileforge-does-not-exist.wsh
+stat D:\Antigravity\bin\fileforge-does-not-exist.msc
+stat D:\Antigravity\bin\fileforge-does-not-exist.cpl
+stat C:\Users\zhafr\AppData\Roaming\npm\fileforge-does-not-exist.com
+stat C:\Users\zhafr\AppData\Roaming\npm\fileforge-does-not-exist.exe
+stat C:\Users\zhafr\AppData\Roaming\npm\fileforge-does-not-exist.bat
+stat C:\Users\zhafr\AppData\Roaming\npm\fileforge-does-not-exist.cmd
+stat C:\Users\zhafr\AppData\Roaming\npm\fileforge-does-not-exist.vbs
+stat C:\Users\zhafr\AppData\Roaming\npm\fileforge-does-not-exist.vbe
+stat C:\Users\zhafr\AppData\Roaming\npm\fileforge-does-not-exist.js
+stat C:\Users\zhafr\AppData\Roaming\npm\fileforge-does-not-exist.jse
+stat C:\Users\zhafr\AppData\Roaming\npm\fileforge-does-not-exist.wsf
+stat C:\Users\zhafr\AppData\Roaming\npm\fileforge-does-not-exist.wsh
+stat C:\Users\zhafr\AppData\Roaming\npm\fileforge-does-not-exist.msc
+stat C:\Users\zhafr\AppData\Roaming\npm\fileforge-does-not-exist.cpl

@@ -1,0 +1,4 @@
+./compress_wizard.go
+./convert_wizard.go
+./menu.go
+./path.go

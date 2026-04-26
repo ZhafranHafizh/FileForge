@@ -1,0 +1,6 @@
+./compress_wizard.go
+./convert_wizard.go
+./menu.go
+./path.go
+./pdf_helpers.go
+./pdf_wizard.go

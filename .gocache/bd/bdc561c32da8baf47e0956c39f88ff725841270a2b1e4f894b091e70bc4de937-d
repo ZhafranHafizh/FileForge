@@ -1,0 +1,7 @@
+./common.go
+./info.go
+./merge.go
+./split.go
+./info_test.go
+./merge_test.go
+./split_test.go

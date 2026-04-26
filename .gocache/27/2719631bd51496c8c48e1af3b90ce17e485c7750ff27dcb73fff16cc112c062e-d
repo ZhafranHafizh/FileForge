@@ -1,0 +1,5 @@
+./doc.go
+./syscall_windows.go
+./types.go
+./types_windows.go
+./zsyscall_windows.go
