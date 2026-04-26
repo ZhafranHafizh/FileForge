@@ -1,6 +1,0 @@
-./image.go
-./kind.go
-./pdf.go
-./image_test.go
-./kind_test.go
-./pdf_test.go

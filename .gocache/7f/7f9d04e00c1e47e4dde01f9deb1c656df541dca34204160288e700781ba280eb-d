@@ -1,8 +1,0 @@
-./image.go
-./image_to_pdf.go
-./pdf_to_image.go
-./routes.go
-./image_test.go
-./image_to_pdf_test.go
-./pdf_to_image_test.go
-./routes_test.go

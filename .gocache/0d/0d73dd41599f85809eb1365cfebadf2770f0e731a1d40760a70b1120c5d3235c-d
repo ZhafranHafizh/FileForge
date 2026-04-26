@@ -1,8 +1,0 @@
-./compress_wizard.go
-./convert_wizard.go
-./menu.go
-./path.go
-./compress_wizard_test.go
-./convert_wizard_test.go
-./menu_test.go
-./path_test.go
